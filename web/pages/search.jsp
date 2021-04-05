@@ -19,6 +19,7 @@
                     <option value="${category.categoryId}">${category.categoryName}</option>
                 </c:forEach>
             </select>
+            <button id="btnSearch">Search</button>
             <div id="searchResult">
                 <!-- div that will contain search result -->
             </div>

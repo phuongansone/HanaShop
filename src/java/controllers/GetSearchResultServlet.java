@@ -58,11 +58,11 @@ public class GetSearchResultServlet extends HttpServlet {
         
         // get targetted page
         int page = getCurrentPage(request);
+        int totalPage;
         int[] pages;
         
         int recordPerPage = Integer.parseInt(request.getServletContext()
                 .getInitParameter(RECORD_PER_PAGE));
-        int totalPage;
         
         FoodService foodService = new FoodService();
         List<FoodDTO> foodLst;
@@ -71,12 +71,21 @@ public class GetSearchResultServlet extends HttpServlet {
                 // If the user do not search by category
                 totalPage = foodService.getTotalPageForActiveFood(recordPerPage);
                 pages = getPages(totalPage);
-                foodLst = foodService.getAllAvailableFood(page - 1, recordPerPage);
+                
+                int offset = (page - 1) * recordPerPage;
+                foodLst = foodService.getAllAvailableFood(offset, recordPerPage);
             } else {
                 // If the user search by category
-                totalPage = foodService.getTotalPageForActiveFood(recordPerPage);
+                totalPage = foodService.getTotalPageForActiveFoodByCategory(
+                                Integer.parseInt(categoryId), 
+                                recordPerPage);
+                
                 pages = getPages(totalPage);
-                foodLst = foodService.getAllAvailableFood(page - 1, recordPerPage);
+                
+                int offset = (page - 1) * recordPerPage;
+                foodLst = foodService.getFoodsByCategoryId(
+                        Integer.parseInt(categoryId),
+                        offset, recordPerPage);
             }
             
         } catch (ClassNotFoundException | SQLException ex) {

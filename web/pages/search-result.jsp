@@ -36,8 +36,9 @@
         <nav aria-label="Page navigation">
               <ul class="pagination">
                 <c:forEach items="${requestScope.PAGES}" var="pageNo">
-                    <li class="page-item">
-                        <button class="page-link" value="${pageNo}" name="page">
+                    <li class="page-item ${pageNo == requestScope.PAGE ? 'active' : ''}">
+                        <button class="page-link" 
+                                id="btnPage" value="${pageNo}" name="page">
                             ${pageNo}
                         </button>
                     </li>
@@ -49,9 +50,18 @@
         // jQuery selector
         var PAGE_LINK_CLASS = ".page-link";
         
+        // Click page button for pagination
         $(PAGE_LINK_CLASS).on("click", function(event) {
             var page = event.target.value;
-            searchItems({page: page});
+            var condition = {page: page};
+
+            if ($(SELECT_CATEGORY).val() !== null
+                    && $(SELECT_CATEGORY).val() !== undefined
+                    && $(SELECT_CATEGORY).val() !== '0') {
+                condition.categoryId = $(SELECT_CATEGORY).val();
+            }
+
+            searchItems(condition);
         });
     </script>
 </html>

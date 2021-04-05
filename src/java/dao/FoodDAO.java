@@ -141,6 +141,89 @@ public class FoodDAO {
     }
     
     /**
+     * Get total number of active food by category id
+     * @param categoryId
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public int getTotalNumberOfActiveFoodByCategoryId(int categoryId) 
+            throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        int total = 0;
+        
+        try {
+            conn = DatabaseUtils.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT count(*) as total "
+                        + "FROM food "
+                        + "WHERE foodQuantity > 0 and status = 1 "
+                        + "and categoryId = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, categoryId);
+                
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    total = rs.getInt(RequestParameter.TOTAL);
+                }
+            }
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, rs);
+        }
+        
+        return total;
+    }
+    
+    /**
+     * Get food by category id
+     * @param categoryId
+     * @param off
+     * @param len
+     * @return list of food
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public List<FoodDTO> getFoodsByCategoryId(int categoryId, int off, int len) 
+            throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        List<FoodDTO> foodLst = new ArrayList<>();
+        
+        try {
+            conn = DatabaseUtils.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT foodId, foodName, foodImage, description, "
+                        + "foodPrice, createAt, status, foodQuantity, "
+                        + "categoryName, username "
+                        + "FROM food  INNER JOIN category USING (categoryId) "
+                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "WHERE foodQuantity > 0 and status = 1 "
+                        + "and categoryId = ? "
+                        + "ORDER BY createAt DESC "
+                        + "LIMIT ?, ?";
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, categoryId);
+                ps.setInt(2, off);
+                ps.setInt(3, len);
+                
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    foodLst.add(mapResultSetToFoodDTO(rs));
+                }
+            }
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, rs);
+        }
+        
+        return foodLst;
+    }
+    
+    /**
      * Map ResultSet to FoodDTO
      * @param rs
      * @return FoodDTO

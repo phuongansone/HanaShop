@@ -121,4 +121,33 @@ public class FoodService {
         double totalPage = (double)foodDAO.getTotalNumberOfActiveFood() / (double)recordPerPage;
         return (int)Math.ceil(totalPage);
     }
+    
+    /**
+     * Get food by category id
+     * @param categoryId
+     * @param off
+     * @param len
+     * @return list of food
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public List<FoodDTO> getFoodsByCategoryId(int categoryId, int off, int len) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.getFoodsByCategoryId(categoryId, off, len);
+    }
+    
+    /**
+     * get total number of pages necessary for active food
+     * @param categoryId
+     * @param recordPerPage
+     * @return total number of pages
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public int getTotalPageForActiveFoodByCategory(int categoryId, int recordPerPage) 
+            throws ClassNotFoundException, SQLException {
+        double totalPage = (double)foodDAO.getTotalNumberOfActiveFoodByCategoryId(categoryId)
+                / (double)recordPerPage;
+        return (int)Math.ceil(totalPage);
+    }
 }

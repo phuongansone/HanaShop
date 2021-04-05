@@ -64,7 +64,7 @@
     </context-param>
     <context-param>
         <param-name>recordPerPage</param-name>
-        <param-value>20</param-value>
+        <param-value>5</param-value>
     </context-param>
     <welcome-file-list>
         <welcome-file>MainServlet</welcome-file>
