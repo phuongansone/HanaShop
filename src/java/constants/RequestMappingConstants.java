@@ -53,7 +53,7 @@ public class RequestMappingConstants {
         public static final String SERVLET = "GetSearchResultServlet";
         
         /** View jsp */
-        public static final String VIEW = "pages/search-result.jspf";
+        public static final String VIEW = "pages/search-result.jsp";
         
         /**
          * Constructor

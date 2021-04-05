@@ -73,7 +73,9 @@ public class CreateFoodServlet extends HttpServlet {
         try {
             categories = new CategoryService().getAllCategories();
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(CreateFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateFoodServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }

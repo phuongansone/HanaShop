@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.DatabaseUtils;
 
-import static constants.RequestParameter.*;
+import constants.RequestParameter.*;
+import constants.RequestParameter;
 import dto.UserDTO;
 import java.sql.Date;
 
@@ -46,7 +47,7 @@ public class FoodDAO {
                 ps.setString(1, foodDTO.getFoodName());
                 ps.setString(2, foodDTO.getFoodImage());
                 ps.setString(3, foodDTO.getDescription());
-                ps.setDouble(4, foodDTO.getFoodPrice());
+                ps.setInt(4, foodDTO.getFoodPrice());
                 ps.setInt(5, foodDTO.getCategory() != null ? 
                         foodDTO.getCategory().getCategoryId() : null);
                 ps.setBoolean(6, foodDTO.isStatus());
@@ -59,6 +60,38 @@ public class FoodDAO {
         }
         
         return result;
+    }
+    
+    /**
+     * Get total number of active food records from database
+     * @return number of records
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public int getTotalNumberOfActiveFood() 
+            throws ClassNotFoundException, SQLException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        int noOfRecords = 0;
+        try {
+            conn = DatabaseUtils.makeConnection();
+            
+            if (conn != null) {
+                String sql = "SELECT count(*) as total FROM food "
+                        + "WHERE foodQuantity > 0 and status = 1";
+                ps = conn.prepareStatement(sql);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    noOfRecords = rs.getInt(RequestParameter.TOTAL);
+                }
+            }
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, rs);
+        }
+        
+        return noOfRecords;
     }
     
     /**
@@ -79,26 +112,27 @@ public class FoodDAO {
 
         try {
             conn = DatabaseUtils.makeConnection();
-            String sql = "SELECT foodId, foodName, foodImage, description, "
-                    + "foodPrice, createAt, status, foodQuantity, "
-                    + "categoryName, username "
-                    + "FROM food  "
-                    + "INNER JOIN category USING (categoryId) "
-                    + "INNER JOIN user ON food.userCreated = user.id "
-                    + "WHERE foodQuantity > ? and status = ? "
-                    + "ORDER BY createAt "
-                    + "DESC LIMIT ?, ?";
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, 0);
-            ps.setBoolean(2, true);
-            ps.setInt(3, off);
-            ps.setInt(4, len);
-            rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                foodLst.add(mapResultSetToFoodDTO(rs));
+            if (conn != null) {
+                String sql = "SELECT foodId, foodName, foodImage, description, "
+                        + "foodPrice, createAt, status, foodQuantity, "
+                        + "categoryName, username "
+                        + "FROM food  "
+                        + "INNER JOIN category USING (categoryId) "
+                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "WHERE foodQuantity > ? and status = ? "
+                        + "ORDER BY createAt "
+                        + "DESC LIMIT ?, ?";
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, 0);
+                ps.setBoolean(2, true);
+                ps.setInt(3, off);
+                ps.setInt(4, len);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    foodLst.add(mapResultSetToFoodDTO(rs));
+                }                
             }
-            
         } finally {
             DatabaseUtils.closeConnection(conn, ps, rs);
         }
@@ -120,7 +154,7 @@ public class FoodDAO {
         String foodName = rs.getString(FoodParam.FOOD_NAME);
         String foodImage = rs.getString(FoodParam.FOOD_IMAGE);
         String description = rs.getString(FoodParam.DESCRIPTION);
-        double foodPrice = rs.getDouble(FoodParam.FOOD_PRICE);
+        int foodPrice = rs.getInt(FoodParam.FOOD_PRICE);
         Date createAt = rs.getDate(FoodParam.CREATE_AT);
         boolean status = rs.getBoolean(FoodParam.STATUS);
         int foodQuantity = rs.getInt(FoodParam.FOOD_QUANTITY);

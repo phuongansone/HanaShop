@@ -62,6 +62,10 @@
         <param-name>resources</param-name>
         <param-value>web\resources\</param-value>
     </context-param>
+    <context-param>
+        <param-name>recordPerPage</param-name>
+        <param-value>20</param-value>
+    </context-param>
     <welcome-file-list>
         <welcome-file>MainServlet</welcome-file>
     </welcome-file-list>

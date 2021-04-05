@@ -5,6 +5,12 @@ package constants;
  * @author andtpse62827
  */
 public class RequestParameter {
+    /** Total */
+    public static final String TOTAL = "total";
+    
+    /** Page */
+    public static final String PAGE = "page";
+    
     /**
      * Common parameters for User entity
      */

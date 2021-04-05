@@ -13,4 +13,8 @@ public class CommonAttribute {
     public static final String USER = "USER";
     public static final String INSERT_STATUS = "INSERT";
     public static final String CATEGORIES = "CATEGORIES";
+    public static final String PAGE = "PAGE";
+    public static final String PAGES = "PAGES";
+    public static final String TOTAL = "TOTAL";
+    public static final String FOODS = "FOODS";
 }

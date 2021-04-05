@@ -21,7 +21,7 @@ public class FoodDTO implements Serializable{
     private String description;
     
     /** Price */
-    private double foodPrice;
+    private int foodPrice;
     
     /** Create date */
     private Date createAt;
@@ -61,7 +61,7 @@ public class FoodDTO implements Serializable{
      * @param foodQuantity
      * @param userCreated
      */
-    public FoodDTO(int foodId, String foodName, String foodImage, String description, double foodPrice, Date createAt, Date updateAt, CategoryDTO category, boolean status, int foodQuantity, UserDTO userCreated) {
+    public FoodDTO(int foodId, String foodName, String foodImage, String description, int foodPrice, Date createAt, Date updateAt, CategoryDTO category, boolean status, int foodQuantity, UserDTO userCreated) {
         this.foodId = foodId;
         this.foodName = foodName;
         this.foodImage = foodImage;
@@ -86,7 +86,7 @@ public class FoodDTO implements Serializable{
      * @param foodQuantity
      * @param userCreated 
      */
-    public FoodDTO(String foodName, String foodImage, String description, double foodPrice, CategoryDTO category, boolean status, int foodQuantity, UserDTO userCreated) {
+    public FoodDTO(String foodName, String foodImage, String description, int foodPrice, CategoryDTO category, boolean status, int foodQuantity, UserDTO userCreated) {
         this.foodName = foodName;
         this.foodImage = foodImage;
         this.description = description;
@@ -130,11 +130,11 @@ public class FoodDTO implements Serializable{
         this.description = description;
     }
 
-    public double getFoodPrice() {
+    public int getFoodPrice() {
         return foodPrice;
     }
 
-    public void setFoodPrice(double foodPrice) {
+    public void setFoodPrice(int foodPrice) {
         this.foodPrice = foodPrice;
     }
 

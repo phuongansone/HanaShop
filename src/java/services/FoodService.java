@@ -58,8 +58,8 @@ public class FoodService {
 
         // Get food info
         String foodName = request.getParameter(FoodParam.FOOD_NAME);
-            String description = request.getParameter(FoodParam.DESCRIPTION);
-        double foodPrice = StringUtils.getDouble(request.getParameter(FoodParam.FOOD_PRICE), 0);
+        String description = request.getParameter(FoodParam.DESCRIPTION);
+        int foodPrice = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_PRICE), 0);
         int categoryId = StringUtils.getInteger(request.getParameter(FoodParam.CATEGORY_ID), 0);
         int foodQuantity = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_QUANTITY), 0);
         String foodImage = processUploadedFile(request, FoodParam.FOOD_IMAGE);
@@ -107,5 +107,18 @@ public class FoodService {
     public List<FoodDTO> getAllAvailableFood(int off, int len) 
             throws SQLException, ClassNotFoundException {
         return foodDAO.getAllAvailableFood(off, len);
+    }
+    
+    /**
+     * get total number of pages necessary for active food
+     * @param recordPerPage
+     * @return total number of pages
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public int getTotalPageForActiveFood(int recordPerPage) 
+            throws ClassNotFoundException, SQLException {
+        double totalPage = (double)foodDAO.getTotalNumberOfActiveFood() / (double)recordPerPage;
+        return (int)Math.ceil(totalPage);
     }
 }

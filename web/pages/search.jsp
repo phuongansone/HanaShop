@@ -20,7 +20,7 @@
                 </c:forEach>
             </select>
             <div id="searchResult">
-                
+                <!-- div that will contain search result -->
             </div>
         </div>
         
