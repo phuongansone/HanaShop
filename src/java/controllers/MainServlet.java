@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import java.io.IOException;
@@ -40,6 +35,10 @@ public class MainServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        response.setDateHeader("Expires", 0); // Proxies.
+        
         request.setCharacterEncoding("UTF-8");
         String reqAction = request.getParameter(ACTION_PARAM);
         String url = SearchItemRequest.SERVLET;
@@ -49,11 +48,20 @@ public class MainServlet extends HttpServlet {
                 case LoginRequest.ACTION:
                     url = LoginRequest.SERVLET;
                     break;
+                case LogoutRequest.ACTION:
+                    url = LogoutRequest.SERVLET;
+                    break;
                 case CreateFoodRequest.ACTION:
                     url = CreateFoodRequest.SERVLET;
                     break;
                 case GetSearchResultRequest.ACTION:
                     url = GetSearchResultRequest.SERVLET;
+                    break;
+                case FoodDetailRequest.ACTION:
+                    url = FoodDetailRequest.SERVLET;
+                    break;
+                case EditFoodRequest.ACTION:
+                    url = EditFoodRequest.SERVLET;
                     break;
             }
         }

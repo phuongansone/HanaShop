@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package constants;
 
 /**
@@ -11,10 +6,19 @@ package constants;
  */
 public class CommonAttribute {
     public static final String USER = "USER";
+    public static final String LOGIN_STATUS = "LOGIN";
+    public static final String LOGOUT_STATUS = "LOGOUT";
+    
     public static final String INSERT_STATUS = "INSERT";
+    
     public static final String CATEGORIES = "CATEGORIES";
+    
+    public static final String PRICE_RANGES = "PRICE_RANGES";
+    
     public static final String PAGE = "PAGE";
     public static final String PAGES = "PAGES";
     public static final String TOTAL = "TOTAL";
+    
+    public static final String FOOD = "FOOD";
     public static final String FOODS = "FOODS";
 }

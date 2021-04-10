@@ -26,6 +26,23 @@ public class RequestMappingConstants {
     }
     
     /**
+     * Log out request
+     */
+    public static class LogoutRequest {
+        /** Action parameter */
+        public static final String ACTION = "logout";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "LogoutServlet";
+        
+        /**
+         * Constructor
+         */
+        private LogoutRequest() {
+        }
+    }
+    
+    /**
      * Search Item request
      */
     public static class SearchItemRequest {
@@ -45,6 +62,9 @@ public class RequestMappingConstants {
         }
     }
     
+    /**
+     * Get search result
+     */
     public static class GetSearchResultRequest {
         /** Action parameter */
         public static final String ACTION = "getSearchResult";
@@ -62,6 +82,9 @@ public class RequestMappingConstants {
         }
     }
     
+    /**
+     * Create new food request
+     */
     public static class CreateFoodRequest {
         /** Action parameter */
         public static final String ACTION = "createFood";
@@ -76,7 +99,50 @@ public class RequestMappingConstants {
          * Constructor
          */
         private CreateFoodRequest() {
-        }        
+        }     
+    }
+    
+    /**
+     * Food detail request
+     */
+    public static class FoodDetailRequest {
+        /** Action parameter */
+        public static final String ACTION = "foodDetail";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "FoodDetailServlet";
+        
+        /** View jsp for admin */
+        public static final String VIEW_ADMIN = "pages/admin/edit-food.jsp";
+        
+        /** View jsp for normal user */
+        public static final String VIEW_USER = "pages/view-food.jsp";
+        
+        /**
+         * Constructor
+         */
+        private FoodDetailRequest() {
+        }
+    }
+    
+    /**
+     * Edit food request
+     */
+    public static final class EditFoodRequest {
+        /** Action parameter */
+        public static final String ACTION = "editFood";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "EditFoodServlet";
+        
+        /** View jsp for admin */
+        public static final String VIEW = "pages/admin/edit-food.jsp";
+        
+        /**
+         * Constructor
+         */
+        private EditFoodRequest() {
+        }
     }
     
     /**

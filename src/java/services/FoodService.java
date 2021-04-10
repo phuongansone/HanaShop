@@ -32,68 +32,13 @@ public class FoodService {
     private final FoodDAO foodDAO;
     private static final String IMAGES_DIR = "images";
     private static final String RESOURCES = "resources";
+    private static final String CHECKED_CHECKBOX_VALUE = "on";
 
     /**
      * Constructor
      */
     public FoodService() {
         this.foodDAO = new FoodDAO();
-    }
-    
-    /**
-     * Add new food based on the information received from HttpServletRequest
-     * @param request request from client
-     * @return insert result
-     * @throws ClassNotFoundException
-     * @throws SQLException 
-     * @throws java.io.IOException 
-     * @throws javax.servlet.ServletException 
-     */
-    public boolean addFood(HttpServletRequest request) 
-            throws ClassNotFoundException, SQLException, 
-            IOException, ServletException {
-        // Get user info
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO) session.getAttribute(CommonAttribute.USER);
-
-        // Get food info
-        String foodName = request.getParameter(FoodParam.FOOD_NAME);
-        String description = request.getParameter(FoodParam.DESCRIPTION);
-        int foodPrice = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_PRICE), 0);
-        int categoryId = StringUtils.getInteger(request.getParameter(FoodParam.CATEGORY_ID), 0);
-        int foodQuantity = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_QUANTITY), 0);
-        String foodImage = processUploadedFile(request, FoodParam.FOOD_IMAGE);
-        
-        FoodDTO foodDTO = new FoodDTO(foodName, foodImage, description, foodPrice, 
-                new CategoryDTO(categoryId), true, foodQuantity, userDTO);
-        
-        return foodDAO.addFood(foodDTO);
-    }
-    
-    /**
-     * Process uploaded file
-     * @param request
-     * @param paramName
-     * @return
-     * @throws IOException
-     * @throws ServletException 
-     */
-    private String processUploadedFile(HttpServletRequest request, String paramName) 
-            throws IOException, ServletException {
-        // get app path
-        String appPath = FileUtils.getAppPath(request);
-        // concate to get resource path
-        appPath = appPath + request.getServletContext().getInitParameter(RESOURCES);
-        
-        Part imagePart = request.getPart(paramName);
-        String fileName = FileUtils.generateFileNameWithMilliseconds(
-                Paths.get(imagePart.getSubmittedFileName())
-                .getFileName().toString());
-        String filePath = FileUtils.getFilePath(appPath, IMAGES_DIR, fileName);
-        
-        FileUtils.saveHttpPartToFile(imagePart, filePath);
-        
-        return fileName;
     }
     
     /**
@@ -149,5 +94,176 @@ public class FoodService {
         double totalPage = (double)foodDAO.getTotalNumberOfActiveFoodByCategoryId(categoryId)
                 / (double)recordPerPage;
         return (int)Math.ceil(totalPage);
+    }
+    
+    /**
+     * Get food by name
+     * @param keyword
+     * @param off
+     * @param len
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public List<FoodDTO> getFoodsByName(String keyword, int off, int len) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.getFoodsByName(keyword, off, len);
+    }
+    
+    /**
+     * Get total page for active food by name
+     * @param keyword
+     * @param recordPerPage
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public int getTotalPageForActiveFoodByName(String keyword, int recordPerPage) 
+            throws SQLException, ClassNotFoundException {
+        double totalPage = (double)foodDAO.getTotalNumberOfActiveFoodByName(keyword) 
+                / (double) recordPerPage;
+        return (int)Math.ceil(totalPage);
+    }
+    
+    /**
+     * Get food by price range
+     * @param from
+     * @param to
+     * @param off
+     * @param len
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public List<FoodDTO> getFoodByPriceRange(int from, int to, int off, int len) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.getFoodByPriceRange(from, to, off, len);
+    }
+    
+    /**
+     * Get total page for active food by price range
+     * @param from
+     * @param to
+     * @param recordPerPage
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public int getTotalPageForActiveFoodByPriceRange(int from, int to, 
+            int recordPerPage) throws SQLException, ClassNotFoundException {
+        double totalPage = (double)foodDAO.getTotalNumberOfActiveFoodPriceRange(from, to) 
+                / (double) recordPerPage;
+        return (int)Math.ceil(totalPage);
+    }
+    
+    /**
+     * Get food by Id
+     * @param foodId
+     * @return food specified by Id
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public FoodDTO getFoodById(int foodId) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.getFoodById(foodId);
+    }
+   
+    /**
+     * add food
+     * @param foodDTO
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public boolean addFood(FoodDTO foodDTO) 
+            throws ClassNotFoundException, SQLException {
+        return foodDAO.addFood(foodDTO);
+    }
+    
+    /**
+     * update food
+     * @param foodDTO
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public int updateFood(FoodDTO foodDTO) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.updateFood(foodDTO);
+    }
+    
+    /**
+     * extract foodDTO from request
+     * @param request
+     * @return
+     * @throws IOException
+     * @throws ServletException 
+     */
+    public FoodDTO getFoodDTOFromRequest(HttpServletRequest request) 
+            throws IOException, ServletException {
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
+        
+        String foodName = request.getParameter(FoodParam.FOOD_NAME);
+        String foodImg = processUploadedFile(request, FoodParam.FOOD_IMAGE);
+        String description = request.getParameter(FoodParam.DESCRIPTION);
+        int price = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_PRICE), 0);
+        int categoryId = StringUtils.getInteger(request.getParameter(FoodParam.CATEGORY_ID), 0);
+        int quantity = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_QUANTITY), 0);
+        
+        if (request.getParameter(FoodParam.FOOD_ID) != null) {
+            // food record is already in database
+            boolean isActive = CHECKED_CHECKBOX_VALUE
+                    .equalsIgnoreCase(request.getParameter(FoodParam.STATUS));
+            FoodDTO food = new FoodDTO(foodName, foodImg, description, price, 
+                    new CategoryDTO(categoryId), isActive, quantity);
+            food.setFoodId(StringUtils.getInteger(request.getParameter(FoodParam.FOOD_ID), 0));
+            food.setUserUpdate(user);
+            return food;
+        }
+        
+        // otherwise, new food is inserted
+        FoodDTO food = new FoodDTO(foodName, foodImg, description, price, 
+                new CategoryDTO(categoryId), true, quantity);
+        food.setUserCreated(user);
+        return food;
+    }
+    
+        
+    /**
+     * Process uploaded file
+     * @param request
+     * @param paramName
+     * @return
+     * @throws IOException
+     * @throws ServletException 
+     */
+    private String processUploadedFile(HttpServletRequest request, String paramName) 
+            throws IOException, ServletException {
+        // get app path
+        String appPath = FileUtils.getAppPath(request);
+        
+        // concate to get resource path
+        appPath = appPath + request.getServletContext().getInitParameter(RESOURCES);
+        
+        // get file name
+        Part imagePart = request.getPart(paramName);
+        String fileName = Paths.get(imagePart.getSubmittedFileName())
+                .getFileName().toString();
+        
+        if ("".equals(fileName)) {
+            // no new file uploaded
+            return request.getParameter(paramName);
+        }
+        
+        String savedFileName = FileUtils.generateFileNameWithMilliseconds(fileName);
+        
+        // get path to save file
+        String filePath = FileUtils.getFilePath(appPath, IMAGES_DIR, savedFileName);
+        
+        // save file
+        FileUtils.saveHttpPartToFile(imagePart, filePath);
+        
+        return savedFileName;
     }
 }

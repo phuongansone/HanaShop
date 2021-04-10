@@ -1,25 +1,30 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controllers;
 
 import constants.CommonAttribute;
+import constants.RequestMappingConstants.*;
+import static constants.RequestParameter.*;
+import dto.CategoryDTO;
+import dto.FoodDTO;
 import dto.UserDTO;
-import enums.CRUDStatus;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import services.CategoryService;
 import services.FoodService;
 import services.UserService;
-
-import static constants.RequestMappingConstants.*;
-import dto.CategoryDTO;
-import java.util.List;
-import javax.servlet.annotation.MultipartConfig;
-import services.CategoryService;
 
 /**
  *
@@ -30,7 +35,7 @@ import services.CategoryService;
         maxFileSize = 1024 * 1024 * 5, 
         maxRequestSize = 1024 * 1024 * 5 * 5
 )
-public class CreateFoodServlet extends HttpServlet {
+public class EditFoodServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,7 +53,7 @@ public class CreateFoodServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0); // Proxies.
     }
-
+    
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -61,30 +66,39 @@ public class CreateFoodServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        // Get user info
+        
+        // get user
         HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO) session.getAttribute(CommonAttribute.USER);
-
-        // Only admin can create new food
-        if (!UserService.isAdmin(userDTO)) {
+        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
+        
+        // Edit food functionality is accessible only for admin
+        if (!UserService.isAdmin(user)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         
+        FoodDTO foodDTO;
         List<CategoryDTO> categories;
         
         try {
+            int foodId = Integer.parseInt(request.getParameter(FoodParam.FOOD_ID));
+            foodDTO = new FoodService().getFoodById(foodId);
             categories = new CategoryService().getAllCategories();
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(CreateFoodServlet.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            
+        } catch (SQLException | ClassNotFoundException | NumberFormatException ex) {
+            Logger.getLogger(EditFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
         
+        if (foodDTO == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        
+        request.setAttribute(CommonAttribute.FOOD, foodDTO);
         request.setAttribute(CommonAttribute.CATEGORIES, categories);
-        request.getRequestDispatcher(CreateFoodRequest.VIEW).forward(request, response);
+        
+        request.getRequestDispatcher(EditFoodRequest.VIEW).forward(request, response);
     }
 
     /**
@@ -99,40 +113,39 @@ public class CreateFoodServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        // Get user info
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO) session.getAttribute(CommonAttribute.USER);
         
-        // Only admin can create new food
-        if (!UserService.isAdmin(userDTO)) {
+        // get currently logged in user
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
+        
+        // Edit food functionality is accessible only for admin
+        if (!UserService.isAdmin(user)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         
-        // add new food
         FoodService foodService = new FoodService();
-        try {
-            foodService.addFood(foodService.getFoodDTOFromRequest(request));
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(CreateFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
-        
-        // get all categories for rendering 
+        FoodDTO foodDTO = foodService.getFoodDTOFromRequest(request);
         List<CategoryDTO> categories;
-        
         try {
+            // do update
+            foodService.updateFood(foodDTO);
+            
+            // get data for re-rendering
             categories = new CategoryService().getAllCategories();
+            foodDTO = foodService.getFoodById(foodDTO.getFoodId());
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(CreateFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditFoodServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
         
-        request.setAttribute(CommonAttribute.CATEGORIES, categories);       
-        request.setAttribute(CommonAttribute.INSERT_STATUS, CRUDStatus.SUCCESS);
-        request.getRequestDispatcher(CreateFoodRequest.VIEW).forward(request, response);
+        
+        request.setAttribute(CommonAttribute.FOOD, foodDTO);
+        request.setAttribute(CommonAttribute.CATEGORIES, categories);
+        
+        request.getRequestDispatcher(EditFoodRequest.VIEW).forward(request, response);
     }
 
     /**
@@ -144,6 +157,5 @@ public class CreateFoodServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
-    
-    
+
 }

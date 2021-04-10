@@ -1,26 +1,34 @@
 package controllers;
 
 import constants.CommonAttribute;
+import dto.UserDTO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import services.UserService;
 
 import static constants.RequestMappingConstants.*;
-import dto.CategoryDTO;
-import dto.PriceRangeDTO;
+import constants.RequestParameter.*;
+import dto.FoodDTO;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import services.CategoryService;
-import services.PriceRangeService;
+import javax.servlet.annotation.MultipartConfig;
+import services.FoodService;
+
 /**
- *
+ * Servlet to process requests related to a food's detail
  * @author andtpse62827
  */
-public class SearchItemServlet extends HttpServlet {
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 5 * 5
+)
+public class FoodDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,22 +46,36 @@ public class SearchItemServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0); // Proxies.
         
-        List<CategoryDTO> categories;
-        List<PriceRangeDTO> priceRanges;
+        // Get logged in user
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
+        
+        // Get food specified by foodID
+        FoodDTO food;
         
         try {
-            categories = new CategoryService().getAllCategories();
-            priceRanges = new PriceRangeService().getAllActivePriceRanges();
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SearchItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+            int foodId = Integer.parseInt(request.getParameter(FoodParam.FOOD_ID));
+            food = new FoodService().getFoodById(foodId);
+        } catch (SQLException | ClassNotFoundException | NumberFormatException ex) {
+            Logger.getLogger(FoodDetailServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
         
-        request.setAttribute(CommonAttribute.CATEGORIES, categories);
-        request.setAttribute(CommonAttribute.PRICE_RANGES, priceRanges);
+        // If there is no food with the requested id
+        if (food == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
         
-        request.getRequestDispatcher(SearchItemRequest.VIEW).forward(request, response);
+        
+        // Determine url
+        String url = UserService.isAdmin(user) ? EditFoodRequest.SERVLET 
+                : FoodDetailRequest.VIEW_USER;
+        
+        request.setAttribute(CommonAttribute.FOOD, food);
+        request.getRequestDispatcher(url).forward(request, response);
     }
 
     /**

@@ -25,6 +25,18 @@
         <servlet-name>GetSearchResultServlet</servlet-name>
         <servlet-class>controllers.GetSearchResultServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FoodDetailServlet</servlet-name>
+        <servlet-class>controllers.FoodDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditFoodServlet</servlet-name>
+        <servlet-class>controllers.EditFoodServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>controllers.LogoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchItemServlet</servlet-name>
         <url-pattern>/SearchItemServlet</url-pattern>
@@ -53,6 +65,18 @@
         <servlet-name>GetSearchResultServlet</servlet-name>
         <url-pattern>/GetSearchResultServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FoodDetailServlet</servlet-name>
+        <url-pattern>/FoodDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditFoodServlet</servlet-name>
+        <url-pattern>/EditFoodServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -64,7 +88,7 @@
     </context-param>
     <context-param>
         <param-name>recordPerPage</param-name>
-        <param-value>5</param-value>
+        <param-value>6</param-value>
     </context-param>
     <welcome-file-list>
         <welcome-file>MainServlet</welcome-file>

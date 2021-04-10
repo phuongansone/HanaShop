@@ -40,6 +40,9 @@ public class FoodDTO implements Serializable{
     
     /** User created */
     private UserDTO userCreated;
+    
+    /** User updated */
+    private UserDTO userUpdate;
 
     /**
      * Constructor with no param
@@ -77,6 +80,41 @@ public class FoodDTO implements Serializable{
 
     /**
      * Constructor
+     * @param foodId
+     * @param foodName
+     * @param foodImage
+     * @param description
+     * @param foodPrice
+     * @param createAt
+     * @param updateAt
+     * @param category
+     * @param status
+     * @param foodQuantity
+     * @param userCreated
+     * @param userUpdated 
+     */
+    public FoodDTO(int foodId, String foodName, String foodImage, 
+            String description, int foodPrice, Date createAt, 
+            Date updateAt, CategoryDTO category, boolean status, 
+            int foodQuantity, UserDTO userCreated, UserDTO userUpdated) {
+        this.foodId = foodId;
+        this.foodName = foodName;
+        this.foodImage = foodImage;
+        this.description = description;
+        this.foodPrice = foodPrice;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.category = category;
+        this.status = status;
+        this.foodQuantity = foodQuantity;
+        this.userCreated = userCreated;
+        this.userUpdate = userUpdated;
+    }
+    
+    
+
+    /**
+     * Constructor
      * @param foodName
      * @param foodImage
      * @param description
@@ -86,7 +124,9 @@ public class FoodDTO implements Serializable{
      * @param foodQuantity
      * @param userCreated 
      */
-    public FoodDTO(String foodName, String foodImage, String description, int foodPrice, CategoryDTO category, boolean status, int foodQuantity, UserDTO userCreated) {
+    public FoodDTO(String foodName, String foodImage, String description, 
+            int foodPrice, CategoryDTO category, boolean status, 
+            int foodQuantity, UserDTO userCreated) {
         this.foodName = foodName;
         this.foodImage = foodImage;
         this.description = description;
@@ -96,6 +136,28 @@ public class FoodDTO implements Serializable{
         this.foodQuantity = foodQuantity;
         this.userCreated = userCreated;
     }
+
+    /**
+     * Constructor with without time and user
+     * @param foodName
+     * @param foodImage
+     * @param description
+     * @param foodPrice
+     * @param category
+     * @param status
+     * @param foodQuantity
+     */
+    public FoodDTO(String foodName, String foodImage, String description, int foodPrice, CategoryDTO category, boolean status, int foodQuantity) {
+        this.foodName = foodName;
+        this.foodImage = foodImage;
+        this.description = description;
+        this.foodPrice = foodPrice;
+        this.category = category;
+        this.status = status;
+        this.foodQuantity = foodQuantity;
+    }
+    
+    
     
 
     public int getFoodId() {
@@ -185,6 +247,12 @@ public class FoodDTO implements Serializable{
     public void setUserCreated(UserDTO userCreated) {
         this.userCreated = userCreated;
     }
-    
-    
+
+    public UserDTO getUserUpdate() {
+        return userUpdate;
+    }
+
+    public void setUserUpdate(UserDTO userUpdate) {
+        this.userUpdate = userUpdate;
+    }
 }

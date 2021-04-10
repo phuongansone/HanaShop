@@ -7,4 +7,8 @@ package enums;
 public enum CRUDStatus {
     SUCCESS,
     FAIL;
+    
+    public String getValue() {
+        return this.toString();
+    }
 }

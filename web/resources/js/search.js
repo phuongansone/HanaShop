@@ -1,8 +1,33 @@
 // jQuery selector
 var SELECT_CATEGORY = '#category';
+var TXB_KEYWORD = '#keyword';
+var RADIO_RANGE = 'input[id^="priceRange_"]:checked';
 var BTN_PAGE = '#btnPage';
 var BTN_SEARCH = '#btnSearch';
 var PAGE_LINK_CLASS = ".page-link";
+
+// utilities
+var UTILS = {
+    strIsNotNullOrUndefinedOrBlank: function(str) {
+        return str !== undefined && str !== null && str.trim().length > 0;
+    },
+    getCondition: function(condition) {
+        if (condition === undefined || condition === null) {
+            condition = {};
+        }
+      
+        if (UTILS.strIsNotNullOrUndefinedOrBlank($(TXB_KEYWORD).val())) {
+            condition.keyword = $(TXB_KEYWORD).val();
+        } else if (UTILS.strIsNotNullOrUndefinedOrBlank($(SELECT_CATEGORY).val())
+                && $(SELECT_CATEGORY).val() !== '0') {
+            condition.categoryId = $(SELECT_CATEGORY).val();
+        } else if (UTILS.strIsNotNullOrUndefinedOrBlank($(RADIO_RANGE).val())) {
+            condition.rangeId = $(RADIO_RANGE).val();
+        }
+      
+      return condition;
+    }
+};
 
 /**
  * Search for items by condition (if specified)
@@ -12,9 +37,7 @@ function searchItems(condition) {
     var settings = {
         method : 'GET',
         url: 'MainServlet',
-        data : {
-            action : 'getSearchResult'
-        },
+        data : condition,
         dataType : 'html',
         success : function(html) {
             $('#searchResult').html(html);
@@ -22,29 +45,17 @@ function searchItems(condition) {
         }
     };
     
-    if (condition !== undefined && condition !== null) {
-        if (condition.categoryId !== undefined && condition.categoryId !== null) {
-            settings.data.categoryId = condition.categoryId;
-        }
-        if (condition.page !== undefined && condition.page !== null) {
-            settings.data.page = condition.page;
-        }
-    }
+    settings.data.action = 'getSearchResult';
     
     $.ajax(settings);
 }
 
 // Click button search to search by categoryId
 $(BTN_SEARCH).on('click', function() {
-    if ($(SELECT_CATEGORY).val() === '0') {
-        searchItems();
-        return;
-    }
-    
-    searchItems({categoryId: $(SELECT_CATEGORY).val()});
+    searchItems(UTILS.getCondition());
 });
 
 $(document).ready(function() {
-    searchItems();
+    searchItems({});
 });
 

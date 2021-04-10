@@ -67,6 +67,9 @@ public class RequestParameter {
         /** Search result parameter */
         public static final String SEARCH_RESULT = "searchResult";
         
+        /** Keyword to search for food */
+        public static final String KEYWORD = "keyword";
+        
         /**
          * private no argument constructor to avoid users from initializing
          */
@@ -76,7 +79,7 @@ public class RequestParameter {
     }
     
     /**
-     * Common parameter for Category Parameter
+     * Common parameter for Category
      */
     public static class CategoryParam {
         /** Category Id */
@@ -89,6 +92,29 @@ public class RequestParameter {
          * private no argument constructor to avoid users from initializing
          */
         private CategoryParam() {
+            
+        }
+    }
+    
+    /**
+     * Common parameter for price range
+     */
+    public static class PriceRangeParam {
+        
+        public static final String ID = "id";
+        
+        public static final String NAME = "name";
+        
+        public static final String FROM = "from";
+        
+        public static final String TO = "to";
+        
+        public static final String RANGE_ID = "rangeId";
+        
+        /**
+         * private no argument constructor to avoid users from initializing
+         */
+        private PriceRangeParam() {
             
         }
     }

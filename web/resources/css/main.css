@@ -1,10 +1,66 @@
+/* import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn&display=swap');
+
+body {
+    font-family: 'Vollkorn', serif;
+    padding-top: 4.5rem;
+}
+
 .nav-bg {
-    background-color: #ccffbd;
+    background-color: #eabf9f;
 }
 
 .nav-brand-style {
-    color: #1c1427;
-    font-size: 1.5rem;
-    font-weight: 700;
+    color: #1e212d;
+    font-size: 1.8rem;
+    font-family: 'Fredoka One', cursive;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.width-100px {
+    width: 100px
+}
+
+.custom-label {
+    display: flex;
+    align-items: center;
+    padding: .375rem 0;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
 }
 

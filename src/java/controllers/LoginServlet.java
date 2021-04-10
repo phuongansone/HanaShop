@@ -1,6 +1,5 @@
 package controllers;
 
-
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +15,7 @@ import services.UserService;
 import constants.CommonAttribute;
 import constants.RequestParameter;
 import static constants.RequestMappingConstants.*;
+import enums.CRUDStatus;
 
 /**
  * Login Servlet
@@ -35,34 +35,11 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        String username = request.getParameter(RequestParameter.UserParam.USERNAME);
-        String password = request.getParameter(RequestParameter.UserParam.PASSWORD);
-        HttpSession session = request.getSession();
-        String url = LoginRequest.VIEW;
-        
-        if (username == null || password == null) {
-            response.sendRedirect(url);
-            return;
-        }
-        
-        try {
-            UserService userService = new UserService();
-            UserDTO userDTO = userService.getUser(username, password);
-            if (userDTO != null) {
-                url = SearchItemRequest.SERVLET;
-                session.setAttribute(CommonAttribute.USER, userDTO);
-            } else {
-                // TODO: set error message invalid username and password
-            }
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            response.sendRedirect(url);
-        }
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        response.setDateHeader("Expires", 0); // Proxies.
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -75,6 +52,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        request.getRequestDispatcher(LoginRequest.VIEW).forward(request, response);
     }
 
     /**
@@ -89,6 +67,34 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        
+        String username = request.getParameter(RequestParameter.UserParam.USERNAME);
+        String password = request.getParameter(RequestParameter.UserParam.PASSWORD);
+        HttpSession session = request.getSession();
+        String url = LoginRequest.VIEW;
+        
+        try {
+            UserDTO userDTO = null;
+            
+            if (username != null && password != null) {
+                UserService userService = new UserService();
+                userDTO = userService.getUser(username, password);
+            }
+            
+            if (userDTO != null) {
+                url = SearchItemRequest.SERVLET;
+                request.setAttribute(CommonAttribute.LOGIN_STATUS, CRUDStatus.SUCCESS);
+                session.setAttribute(CommonAttribute.USER, userDTO);
+            } else {
+                request.setAttribute(CommonAttribute.LOGIN_STATUS, CRUDStatus.FAIL);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
+        
+        request.getRequestDispatcher(url).forward(request, response);
     }
 
     /**
@@ -99,6 +105,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }

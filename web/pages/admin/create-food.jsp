@@ -12,7 +12,7 @@
         <%@include file="../common/navbar.jspf" %>
         <c:if test="${requestScope.INSERT == 'SUCCESS'}">
             <fmt:setBundle basename="InfoMessage_en" var="msg_bundle" scope="page"/> 
-            <fmt:message key="createNewFood.insert" bundle="${msg_bundle}"/>
+            <fmt:message key="food.insert.success" bundle="${msg_bundle}"/>
         </c:if>
         <h1>Add new food</h1>
         <form name="addFoodForm" method="POST" 

@@ -1,26 +1,21 @@
 package controllers;
 
 import constants.CommonAttribute;
+import static constants.RequestMappingConstants.*;
+import dto.UserDTO;
+import enums.CRUDStatus;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import static constants.RequestMappingConstants.*;
-import dto.CategoryDTO;
-import dto.PriceRangeDTO;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import services.CategoryService;
-import services.PriceRangeService;
 /**
  *
  * @author andtpse62827
  */
-public class SearchItemServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,24 +33,18 @@ public class SearchItemServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0); // Proxies.
         
-        List<CategoryDTO> categories;
-        List<PriceRangeDTO> priceRanges;
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
         
-        try {
-            categories = new CategoryService().getAllCategories();
-            priceRanges = new PriceRangeService().getAllActivePriceRanges();
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(SearchItemServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
+        if (user != null) {
+            session.invalidate();
         }
         
-        request.setAttribute(CommonAttribute.CATEGORIES, categories);
-        request.setAttribute(CommonAttribute.PRICE_RANGES, priceRanges);
-        
-        request.getRequestDispatcher(SearchItemRequest.VIEW).forward(request, response);
+        request.setAttribute(CommonAttribute.LOGOUT_STATUS, CRUDStatus.SUCCESS);
+        request.getRequestDispatcher(LoginRequest.SERVLET).forward(request, response);
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -92,6 +81,6 @@ public class SearchItemServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }
+    }// </editor-fold>
 
 }

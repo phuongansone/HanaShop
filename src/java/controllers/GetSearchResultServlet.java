@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import static constants.RequestParameter.*;
 import static constants.RequestMappingConstants.*;
 import constants.CommonAttribute;
 import dto.FoodDTO;
+import dto.PriceRangeDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,13 +15,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import services.FoodService;
+import services.PriceRangeService;
+import utils.StringUtils;
 
 /**
  *
- * @author PC
+ * @author andtpse62827
  */
 public class GetSearchResultServlet extends HttpServlet {
-    /** Context parameter's no of record per page */
+    /** Context parameter: number of record per page */
     private static final String RECORD_PER_PAGE = "recordPerPage";
     
     /**
@@ -40,6 +38,9 @@ public class GetSearchResultServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        response.setDateHeader("Expires", 0); // Proxies.
     }
 
     /**
@@ -54,28 +55,35 @@ public class GetSearchResultServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        
+        // get query parameter
         String categoryId = request.getParameter(CategoryParam.CATEGORY_ID);
+        String keyword = request.getParameter(FoodParam.KEYWORD);
+        String rangeId = request.getParameter(PriceRangeParam.RANGE_ID);
         
         // get targetted page
         int page = getCurrentPage(request);
         int totalPage;
         int[] pages;
         
+        // get number of record per page configuration
         int recordPerPage = Integer.parseInt(request.getServletContext()
                 .getInitParameter(RECORD_PER_PAGE));
         
         FoodService foodService = new FoodService();
         List<FoodDTO> foodLst;
         try {
-            if (categoryId == null) {
-                // If the user do not search by category
-                totalPage = foodService.getTotalPageForActiveFood(recordPerPage);
+            if (keyword != null) {
+                // if user search by keyword
+                totalPage = foodService.getTotalPageForActiveFoodByName(
+                        keyword, recordPerPage);
                 pages = getPages(totalPage);
                 
                 int offset = (page - 1) * recordPerPage;
-                foodLst = foodService.getAllAvailableFood(offset, recordPerPage);
-            } else {
-                // If the user search by category
+                foodLst = foodService.getFoodsByName(keyword, offset, recordPerPage);
+                
+            } else if (categoryId != null) {
+                // if user search by category
                 totalPage = foodService.getTotalPageForActiveFoodByCategory(
                                 Integer.parseInt(categoryId), 
                                 recordPerPage);
@@ -86,9 +94,29 @@ public class GetSearchResultServlet extends HttpServlet {
                 foodLst = foodService.getFoodsByCategoryId(
                         Integer.parseInt(categoryId),
                         offset, recordPerPage);
+            } else if (rangeId != null) {
+                // if user search by rangeId
+                int id = StringUtils.getInteger(rangeId, -1);
+                PriceRangeDTO priceRangeDTO = new PriceRangeService()
+                        .getPriceRangeById(id);
+                int from = priceRangeDTO.getFrom();
+                int to = priceRangeDTO.getTo();
+                
+                totalPage = foodService.getTotalPageForActiveFoodByPriceRange(from, to, recordPerPage);
+                pages = getPages(totalPage);
+                
+                int offset = (page - 1) * recordPerPage;
+                foodLst = foodService.getFoodByPriceRange(from, to, 
+                        offset, recordPerPage);
+            } else {
+                // if user does not specify filter
+                totalPage = foodService.getTotalPageForActiveFood(recordPerPage);
+                pages = getPages(totalPage);
+                
+                int offset = (page - 1) * recordPerPage;
+                foodLst = foodService.getAllAvailableFood(offset, recordPerPage);
             }
-            
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException | NullPointerException ex) {
             Logger.getLogger(GetSearchResultServlet.class.getName())
                     .log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
