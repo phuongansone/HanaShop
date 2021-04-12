@@ -61,8 +61,20 @@ public class RequestParameter {
         /** Create at */
         public static final String CREATE_AT = "createAt";
         
-        /** User created */
+        /** Update at */
+        public static final String UPDATE_AT = "updateAt";
+        
+        /** Id of the last user updated */
+        public static final String USER_UPDATED = "userUpdated";
+        
+        /** Id of the user created */
         public static final String USER_CREATED = "userCreated";
+        
+        /** Username of the last user updated */
+        public static final String USERNAME_UPDATE = "updateUser";
+        
+        /** Username of the user that create the record */
+        public static final String USERNAME_CREATE = "createUser";
         
         /** Search result parameter */
         public static final String SEARCH_RESULT = "searchResult";
@@ -115,6 +127,15 @@ public class RequestParameter {
          * private no argument constructor to avoid users from initializing
          */
         private PriceRangeParam() {
+            
+        }
+    }
+    
+    public static class StatusParam {
+        public static final String CODE = "code";
+        public static final String NAME = "name";
+        
+        private StatusParam() {
             
         }
     }

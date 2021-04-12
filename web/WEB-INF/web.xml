@@ -37,6 +37,14 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>controllers.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManageFoodListServlet</servlet-name>
+        <servlet-class>controllers.ManageFoodListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageFoodServlet</servlet-name>
+        <servlet-class>controllers.ManageFoodServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchItemServlet</servlet-name>
         <url-pattern>/SearchItemServlet</url-pattern>
@@ -76,6 +84,14 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageFoodListServlet</servlet-name>
+        <url-pattern>/ManageFoodListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageFoodServlet</servlet-name>
+        <url-pattern>/ManageFoodServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

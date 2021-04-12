@@ -11,16 +11,15 @@
     </head>
     <body>
         <%@include file="common/navbar.jspf" %>
-        <c:if test="${requestScope.LOGIN == 'SUCCESS'}">
-            <fmt:setBundle basename="InfoMessage_en" var="msg_bundle" />
-            <div class="alert alert-success" role="alert">
-                <fmt:message key="user.login.success" bundle="${msg_bundle}">
-                    <fmt:param value="${sessionScope.USER.username}"/>
-                </fmt:message>
-            </div> 
-        </c:if>
-        
-        <div class="container mt-5">
+        <div class="container page-content">
+            <c:if test="${requestScope.LOGIN == 'SUCCESS'}">
+                <fmt:setBundle basename="InfoMessage_en" var="msg_bundle" />
+                <div class="alert alert-success" role="alert">
+                    <fmt:message key="user.login.success" bundle="${msg_bundle}">
+                        <fmt:param value="${sessionScope.USER.username}"/>
+                    </fmt:message>
+                </div> 
+            </c:if>
             <h1>Search</h1>
             
             <!-- Name filter -->
@@ -80,6 +79,7 @@
         
     </body>
     <script src="resources/js/jquery-3.6.0.min.js"></script>
+    <script src="resources/js/utils.js"></script>
     <script src="resources/js/search.js"></script>
     <script src="resources/js/bootstrap.min.js" /></script>
 </html>

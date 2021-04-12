@@ -103,6 +103,43 @@ public class RequestMappingConstants {
     }
     
     /**
+     * Get food list for manage food page request
+     */
+    public static class ManageFoodListRequest {
+        /** Action parameter */
+        public static final String ACTION = "manageFoodList";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "ManageFoodListServlet";
+        
+        /** View jsp */
+        public static final String VIEW = "pages/admin/manage-food-list.jsp";
+        
+        /**
+         * Constructor
+         */
+        private ManageFoodListRequest() {
+        }
+    }
+    
+    public static class ManageFoodRequest {
+        /** Action parameter */
+        public static final String ACTION = "manageFood";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "ManageFoodServlet";
+        
+        /** View jsp */
+        public static final String VIEW = "pages/admin/manage-food.jsp";
+        
+        /**
+         * Constructor
+         */
+        private ManageFoodRequest() {
+        }
+    }
+    
+    /**
      * Food detail request
      */
     public static class FoodDetailRequest {

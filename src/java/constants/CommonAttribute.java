@@ -15,6 +15,8 @@ public class CommonAttribute {
     
     public static final String PRICE_RANGES = "PRICE_RANGES";
     
+    public static final String STATUSES = "STATUSES";
+    
     public static final String PAGE = "PAGE";
     public static final String PAGES = "PAGES";
     public static final String TOTAL = "TOTAL";

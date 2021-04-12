@@ -1,12 +1,20 @@
 package controllers;
 
+import constants.RequestMappingConstants.CreateFoodRequest;
+import constants.RequestMappingConstants.EditFoodRequest;
+import constants.RequestMappingConstants.FoodDetailRequest;
+import constants.RequestMappingConstants.GetSearchResultRequest;
+import constants.RequestMappingConstants.LoginRequest;
+import constants.RequestMappingConstants.LogoutRequest;
+import constants.RequestMappingConstants.ManageFoodListRequest;
+import constants.RequestMappingConstants.ManageFoodRequest;
+import constants.RequestMappingConstants.SearchItemRequest;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static constants.RequestMappingConstants.*;
 import java.util.Objects;
 import javax.servlet.annotation.MultipartConfig;
 
@@ -56,6 +64,12 @@ public class MainServlet extends HttpServlet {
                     break;
                 case GetSearchResultRequest.ACTION:
                     url = GetSearchResultRequest.SERVLET;
+                    break;
+                case ManageFoodRequest.ACTION:
+                    url = ManageFoodRequest.SERVLET;
+                    break;
+                case ManageFoodListRequest.ACTION:
+                    url = ManageFoodListRequest.SERVLET;
                     break;
                 case FoodDetailRequest.ACTION:
                     url = FoodDetailRequest.SERVLET;

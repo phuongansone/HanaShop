@@ -157,6 +157,33 @@ public class FoodService {
     }
     
     /**
+     * Get all food
+     * @param off
+     * @param len
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public List<FoodDTO> getAllFood(int off, int len) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.getAllFood(off, len);
+    }
+    
+    /**
+     * Get total number of page if displaying all food
+     * @param recordPerPage
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public int getTotalPageForAllFood(int recordPerPage) 
+            throws SQLException, ClassNotFoundException {
+        double totalPage = (double)foodDAO.getTotalNumberOfFood() 
+                / (double) recordPerPage;
+        return (int)Math.ceil(totalPage);
+    }
+    
+    /**
      * Get food by Id
      * @param foodId
      * @return food specified by Id

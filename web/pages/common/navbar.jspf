@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="MainServlet?action=login">Login</a>
+                    <a class="nav-link" href="MainServlet?action=login">Đăng nhập</a>
                 </li>
             </ul>
         </div>
@@ -28,22 +28,24 @@
                 <c:choose>
                     <c:when test="${user.roleId == Role.ADMIN.value}">
                         <li class="nav-item">
-                            <a class="nav-link" href="MainServlet?action=createFood">Add Food</a>
+                            <a class="nav-link" href="MainServlet?action=createFood">Thêm sản phẩm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="MainServlet?action=manageFood">Quản lí sản phẩm</a>
                         </li>
                     </c:when>
 
                     <c:when test="${user.roleId == Role.USER.value}">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Cart</a>
+                            <a class="nav-link" href="#">Giỏ hàng</a>
                         </li>
                     </c:when>
                 </c:choose>    
                 
                 <li>
-                    <a class="nav-link" href="MainServlet?action=logout">Logout</a>
+                    <a class="nav-link" href="MainServlet?action=logout">Đăng xuất</a>
                 </li>
             </ul>
         </div>
-        
     </c:if>
 </nav>

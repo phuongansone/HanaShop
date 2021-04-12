@@ -114,11 +114,13 @@ public class FoodDAO {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
                 String sql = "SELECT foodId, foodName, foodImage, description, "
-                        + "foodPrice, createAt, status, foodQuantity, "
-                        + "category.categoryId, categoryName, username "
-                        + "FROM food  "
+                        + "foodPrice, createAt, status, foodQuantity, updateAt, "
+                        + "category.categoryId, categoryName, "
+                        + "u1.username AS createUser, u2.username AS updateUser "
+                        + "FROM food "
                         + "INNER JOIN category USING (categoryId) "
-                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "INNER JOIN user u1 ON food.userCreated = u1.id "
+                        + "LEFT JOIN user u2 ON food.userUpdated = u2.id "
                         + "WHERE foodQuantity > ? and status = ? "
                         + "ORDER BY createAt "
                         + "DESC LIMIT ?, ?";
@@ -198,14 +200,17 @@ public class FoodDAO {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
                 String sql = "SELECT foodId, foodName, foodImage, description, "
-                        + "foodPrice, createAt, status, foodQuantity, "
-                        + "category.categoryId, categoryName, username "
-                        + "FROM food  INNER JOIN category USING (categoryId) "
-                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "foodPrice, createAt, status, foodQuantity, updateAt, "
+                        + "category.categoryId, categoryName, "
+                        + "u1.username as createUser, u2.username as updateUser "
+                        + "FROM food  "
+                        + "INNER JOIN category USING (categoryId) "
+                        + "INNER JOIN user u1 ON food.userCreated = u1.id "
+                        + "LEFT JOIN user u2 ON food.userUpdated = u2.id "
                         + "WHERE foodQuantity > 0 and status = 1 "
                         + "and categoryId = ? "
-                        + "ORDER BY createAt DESC "
-                        + "LIMIT ?, ?";
+                        + "ORDER BY createAt "
+                        + "DESC LIMIT ?, ?";
                 ps = conn.prepareStatement(sql);
                 ps.setInt(1, categoryId);
                 ps.setInt(2, off);
@@ -244,14 +249,17 @@ public class FoodDAO {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
                 String sql = "SELECT foodId, foodName, foodImage, description, "
-                        + "foodPrice, createAt, status, foodQuantity, "
-                        + "category.categoryId, categoryName, username  "
-                        + "FROM hanashop.food "
+                        + "foodPrice, createAt, status, foodQuantity, updateAt, "
+                        + "category.categoryId, categoryName, "
+                        + "u1.username as createUser, u2.username as updateUser "
+                        + "FROM food "
                         + "INNER JOIN category USING (categoryId) "
-                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "INNER JOIN user u1 ON food.userCreated = u1.id "
+                        + "LEFT JOIN user u2 ON food.userUpdated = u2.id "
                         + "WHERE foodQuantity > 0 and status = 1 "
                         + "and foodName like ? "
-                        + "ORDER BY createAt DESC LIMIT ?, ?";
+                        + "ORDER BY createAt "
+                        + "DESC LIMIT ?, ?";
                 
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, "%" + keyword + "%");
@@ -334,11 +342,13 @@ public class FoodDAO {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
                 String sql = "SELECT foodId, foodName, foodImage, description, "
-                        + "foodPrice, createAt, status, foodQuantity, "
-                        + "category.categoryId, categoryName, username "
+                        + "foodPrice, createAt, status, foodQuantity, updateAt, "
+                        + "category.categoryId, categoryName, "
+                        + "u1.username as createUser, u2.username as updateUser "
                         + "FROM hanashop.food "
                         + "INNER JOIN category USING (categoryId) "
-                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "INNER JOIN user u1 ON food.userCreated = u1.id "
+                        + "LEFT JOIN user u2 ON food.userUpdated = u2.id "
                         + "WHERE foodQuantity > 0 AND status = 1 "
                         + "AND foodPrice BETWEEN ? AND ? "
                         + "ORDER BY createAt "
@@ -402,6 +412,83 @@ public class FoodDAO {
     }
     
     /**
+     * Get all food
+     * @param off
+     * @param len
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public List<FoodDTO> getAllFood(int off, int len) 
+            throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        List<FoodDTO> foodLst = new ArrayList<>();
+        
+        try {
+            conn = DatabaseUtils.makeConnection();
+            
+            if (conn != null) {
+                String sql = "SELECT foodId, foodName, foodImage, description, "
+                        + "foodPrice, createAt, status, foodQuantity, updateAt, "
+                        + "category.categoryId, categoryName, "
+                        + "u1.username AS createUser, u2.username AS updateUser "
+                        + "FROM food INNER JOIN category USING (categoryId) "
+                        + "INNER JOIN user u1 ON food.userCreated = u1.id "
+                        + "LEFT JOIN user u2 ON food.userUpdated = u2.id "
+                        + "ORDER BY createAt DESC LIMIT ?, ?";
+                
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, off);
+                ps.setInt(2, len);
+                
+                rs = ps.executeQuery();
+                
+                while (rs.next()) {
+                    foodLst.add(mapResultSetToFoodDTO(rs));
+                }
+            }
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, rs);
+        }
+        
+        return foodLst;
+    }
+    
+    /**
+     * Get total number of food in database
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public int getTotalNumberOfFood() throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        int total = 0;
+        
+        try {
+            conn = DatabaseUtils.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT count(*) AS total FROM food";
+                ps = conn.prepareStatement(sql);
+                
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    total = rs.getInt(RequestParameter.TOTAL);
+                }
+            }
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, rs);
+        }
+        
+        return total;
+    }
+    
+    /**
      * Get food by Id
      * @param foodId
      * @return food specified by Id
@@ -420,11 +507,13 @@ public class FoodDAO {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
                 String sql = "SELECT foodId, foodName, foodImage, description, "
-                        + "foodPrice, createAt, status, foodQuantity, "
-                        + "category.categoryId, categoryName, username "
+                        + "foodPrice, createAt, status, foodQuantity, updateAt, "
+                        + "category.categoryId, categoryName, "
+                        + "u1.username as createUser, u2.username as updateUser "
                         + "FROM food  "
                         + "INNER JOIN category USING (categoryId) "
-                        + "INNER JOIN user ON food.userCreated = user.id "
+                        + "INNER JOIN user u1 ON food.userCreated = u1.id "
+                        + "LEFT JOIN user u2 ON food.userUpdated = u2.id "
                         + "WHERE foodId = ?";
                 ps = conn.prepareStatement(sql);
                 ps.setInt(1, foodId);
@@ -500,18 +589,20 @@ public class FoodDAO {
         CategoryDTO category = new CategoryDTO(
                         rs.getInt(CategoryParam.CATEGORY_ID),
                         rs.getString(CategoryParam.CATEGORY_NAME));
-        UserDTO user = new UserDTO(rs.getString(UserParam.USERNAME));
+        UserDTO userCreate = new UserDTO(rs.getString(FoodParam.USERNAME_CREATE));
+        UserDTO userUpdate = new UserDTO(rs.getString(FoodParam.USERNAME_UPDATE));
         int foodId = rs.getInt(FoodParam.FOOD_ID);
         String foodName = rs.getString(FoodParam.FOOD_NAME);
         String foodImage = rs.getString(FoodParam.FOOD_IMAGE);
         String description = rs.getString(FoodParam.DESCRIPTION);
         int foodPrice = rs.getInt(FoodParam.FOOD_PRICE);
         Date createAt = rs.getDate(FoodParam.CREATE_AT);
+        Date updateAt = rs.getDate(FoodParam.UPDATE_AT);
         boolean status = rs.getBoolean(FoodParam.STATUS);
         int foodQuantity = rs.getInt(FoodParam.FOOD_QUANTITY);
         
         return new FoodDTO(foodId, foodName, foodImage, description, 
-                foodPrice, createAt, null, category, 
-                status, foodQuantity, user);
+                foodPrice, createAt, updateAt, category, 
+                status, foodQuantity, userCreate, userUpdate);
     }
 }
