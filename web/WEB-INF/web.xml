@@ -45,6 +45,10 @@
         <servlet-name>ManageFoodServlet</servlet-name>
         <servlet-class>controllers.ManageFoodServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteFoodServlet</servlet-name>
+        <servlet-class>controllers.DeleteFoodServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchItemServlet</servlet-name>
         <url-pattern>/SearchItemServlet</url-pattern>
@@ -93,6 +97,10 @@
         <servlet-name>ManageFoodServlet</servlet-name>
         <url-pattern>/ManageFoodServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteFoodServlet</servlet-name>
+        <url-pattern>/DeleteFoodServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -100,7 +108,7 @@
     </session-config>
     <context-param>
         <param-name>resources</param-name>
-        <param-value>web\resources\</param-value>
+        <param-value>F:\resources</param-value>
     </context-param>
     <context-param>
         <param-name>recordPerPage</param-name>

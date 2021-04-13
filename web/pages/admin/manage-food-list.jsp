@@ -18,7 +18,7 @@
                                 <div class="d-flex flex-column food-img">
                                     <div>
                                         <img class="img-fluid img-responsive rounded product-image" 
-                                             src="resources/images/${food.foodImage}">
+                                             src="/files/${food.foodImage}">
                                     </div>
                                 </div>                                   
                             </div>
@@ -54,7 +54,13 @@
                                 <div class="d-flex justify-content-end">
                                     <a class="btn btn-success m-1" 
                                        href="MainServlet?action=editFood&foodId=${food.foodId}">Edit</a>
-                                    <a class="btn btn-danger m-1">Delete</a>
+                                    <form class="delete-form" method="POST" action="MainServlet">
+                                        <input type="hidden" name="action" value="deleteFood" />
+                                        <button class="btn btn-danger m-1 btn-delete" 
+                                                type="submit"
+                                                value="${food.foodId}" name="foodId"
+                                                name="foodId">Delete</button>
+                                    </form>
                                 </div>
 
                             </div>                            
@@ -68,7 +74,7 @@
             <ul class="pagination">
                 <c:forEach items="${requestScope.PAGES}" var="pageNo">
                     <li class="page-item ${pageNo == requestScope.PAGE ? 'active' : ''}}">
-                        <button class="page-link"value="${pageNo}" name="page">
+                        <button class="page-link" value="${pageNo}" name="page">
                             ${pageNo}
                         </button>
                     </li>
@@ -76,4 +82,5 @@
             </ul>
         </nav>
     </body>
+    <script src="resources/js/manage-food-list.js"></script>
 </html>

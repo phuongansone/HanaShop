@@ -182,6 +182,20 @@ public class RequestMappingConstants {
         }
     }
     
+    public static final class DeleteFoodRequest {
+        /** Action parameter */
+        public static final String ACTION = "deleteFood";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "DeleteFoodServlet";
+        
+        /**
+         * Constructor
+         */
+        private DeleteFoodRequest() {
+        }
+    }
+    
     /**
      * Error Page
      */

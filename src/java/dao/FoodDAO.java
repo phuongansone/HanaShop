@@ -20,6 +20,10 @@ import java.sql.Date;
  * @author andtpse62827
  */
 public class FoodDAO {
+    
+    private static final String UPDATE_FOOD_STATUS = "UPDATE food SET status = ? "
+            + "AND userUpdated = ? WHERE foodId = ?";
+    
     /**
      * Add new food to the DB
      * @param foodDTO
@@ -537,7 +541,7 @@ public class FoodDAO {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public int updateFood(FoodDTO food) 
+    public boolean updateFood(FoodDTO food) 
             throws SQLException, ClassNotFoundException {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -576,7 +580,41 @@ public class FoodDAO {
             DatabaseUtils.closeConnection(conn, ps, null);
         }
         
-        return updatedRow;
+        return updatedRow > 0;
+    }
+    
+    /**
+     * Update food status
+     * @param foodId
+     * @param status
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public boolean updateFoodStatus(int foodId, boolean status, int userId) 
+            throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        
+        int updatedRow = 0;
+        
+        try {
+            conn = DatabaseUtils.makeConnection();
+            
+            if (conn != null) {
+                ps = conn.prepareStatement(UPDATE_FOOD_STATUS);
+                ps.setBoolean(1, status);
+                ps.setInt(2, userId);
+                ps.setInt(3, foodId);
+                
+                updatedRow = ps.executeUpdate();
+            }
+            
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, null);
+        }
+        
+        return updatedRow > 0;
     }
     
     /**

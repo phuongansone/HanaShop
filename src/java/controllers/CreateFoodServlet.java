@@ -111,20 +111,13 @@ public class CreateFoodServlet extends HttpServlet {
         
         // add new food
         FoodService foodService = new FoodService();
-        try {
-            foodService.addFood(foodService.getFoodDTOFromRequest(request));
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(CreateFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
         
         // get all categories for rendering 
         List<CategoryDTO> categories;
-        
         try {
+            foodService.addFood(foodService.getFoodDTOFromRequest(request));
             categories = new CategoryService().getAllCategories();
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CreateFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;

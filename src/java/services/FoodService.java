@@ -30,7 +30,6 @@ import utils.StringUtils;
 public class FoodService {
     /** Food Data Access Object */
     private final FoodDAO foodDAO;
-    private static final String IMAGES_DIR = "images";
     private static final String RESOURCES = "resources";
     private static final String FLAG_ON = "1";
 
@@ -214,9 +213,23 @@ public class FoodService {
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public int updateFood(FoodDTO foodDTO) 
+    public boolean updateFood(FoodDTO foodDTO) 
             throws SQLException, ClassNotFoundException {
         return foodDAO.updateFood(foodDTO);
+    }
+    
+    /**
+     * Update food status
+     * @param foodId
+     * @param status
+     * @param userId
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public boolean updateFoodStatus(int foodId, boolean status, int userId) 
+            throws SQLException, ClassNotFoundException {
+        return foodDAO.updateFoodStatus(foodId, status, userId);
     }
     
     /**
@@ -266,11 +279,8 @@ public class FoodService {
      */
     private String processUploadedFile(HttpServletRequest request, String paramName) 
             throws IOException, ServletException {
-        // get app path
-        String appPath = FileUtils.getAppPath(request);
-        
-        // concate to get resource path
-        appPath = appPath + request.getServletContext().getInitParameter(RESOURCES);
+        // get folder path for resources
+        String folderPath = request.getServletContext().getInitParameter(RESOURCES);
         
         // get file name
         Part imagePart = request.getPart(paramName);
@@ -285,7 +295,7 @@ public class FoodService {
         String savedFileName = FileUtils.generateFileNameWithMilliseconds(fileName);
         
         // get path to save file
-        String filePath = FileUtils.getFilePath(appPath, IMAGES_DIR, savedFileName);
+        String filePath = FileUtils.getFilePath(folderPath, savedFileName);
         
         // save file
         FileUtils.saveHttpPartToFile(imagePart, filePath);

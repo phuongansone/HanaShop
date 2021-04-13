@@ -1,6 +1,7 @@
 package controllers;
 
 import constants.RequestMappingConstants.CreateFoodRequest;
+import constants.RequestMappingConstants.DeleteFoodRequest;
 import constants.RequestMappingConstants.EditFoodRequest;
 import constants.RequestMappingConstants.FoodDetailRequest;
 import constants.RequestMappingConstants.GetSearchResultRequest;
@@ -76,6 +77,9 @@ public class MainServlet extends HttpServlet {
                     break;
                 case EditFoodRequest.ACTION:
                     url = EditFoodRequest.SERVLET;
+                    break;
+                case DeleteFoodRequest.ACTION:
+                    url = DeleteFoodRequest.SERVLET;
                     break;
             }
         }

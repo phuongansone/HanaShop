@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
 /**
@@ -23,8 +22,6 @@ import javax.servlet.http.Part;
  * @author andtpse62827
  */
 public class FileUtils {
-    /** build folder that will be refreshed each time you deploy the web */
-    public static final String BUILD_DIR = "build";
     
     /**
      * Generate file name with now in milliseconds
@@ -36,18 +33,15 @@ public class FileUtils {
     }
     /**
      * Get file path with current time in milliseconds
-     * @param applicationPath path to the application
-     * @param folderName name of parent folder
+     * @param folderPath path to the application
      * @param fileName name of file
      * @return absolute path to the file
      * @throws java.io.IOException
      */
-    public static String getFilePath(String applicationPath, String folderName, 
-            String fileName) throws IOException {
-        String folderPath = applicationPath + File.separator 
-                + folderName + File.separator;
+    public static String getFilePath(String folderPath, String fileName) 
+            throws IOException {
         Files.createDirectories(Paths.get(folderPath));
-        return folderPath + fileName;
+        return folderPath + File.separator + fileName;
     }
     
     /**
@@ -92,16 +86,5 @@ public class FileUtils {
                 outputStream.close();
             }
         }
-    }
-    
-    /**
-     * Get app path
-     * @param request
-     * @return path to the application folder
-     */
-    public static String getAppPath(HttpServletRequest request) {
-        String deployedAppPath = request.getServletContext().getRealPath("");
-        int index = deployedAppPath.lastIndexOf(BUILD_DIR);
-        return deployedAppPath.substring(0, index);
     }
 }

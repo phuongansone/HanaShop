@@ -14,7 +14,7 @@
                         <div class="row p-2 m-2 bg-white border rounded">
                             <div class="col-md-3 mt-1">
                                 <img class="img-fluid img-responsive rounded product-image" 
-                                     src="resources/images/${food.foodImage}">
+                                     src="/files/${food.foodImage}">
                             </div>
                             <div class="col-md-6 mt-1">
                                 <h5>${food.foodName}</h5>

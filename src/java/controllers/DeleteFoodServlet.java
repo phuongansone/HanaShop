@@ -1,43 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import constants.CommonAttribute;
-import constants.RequestMappingConstants.*;
-import static constants.RequestParameter.*;
-import dto.CategoryDTO;
-import dto.FoodDTO;
-import dto.StatusDTO;
+import constants.RequestMappingConstants.ManageFoodRequest;
+import constants.RequestParameter.FoodParam;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import services.CategoryService;
 import services.FoodService;
-import services.StatusService;
 import services.UserService;
+import utils.StringUtils;
 
 /**
  *
  * @author andtpse62827
  */
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024,
-        maxFileSize = 1024 * 1024 * 5, 
-        maxRequestSize = 1024 * 1024 * 5 * 5
-)
-public class EditFoodServlet extends HttpServlet {
+public class DeleteFoodServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -68,44 +52,6 @@ public class EditFoodServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        
-        // get user
-        HttpSession session = request.getSession();
-        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
-        
-        // Edit food functionality is accessible only for admin
-        if (!UserService.isAdmin(user)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-        
-        FoodDTO foodDTO;
-        List<CategoryDTO> categories;
-        List<StatusDTO> statuses;
-        
-        try {
-            int foodId = Integer.parseInt(request.getParameter(FoodParam.FOOD_ID));
-            foodDTO = new FoodService().getFoodById(foodId);
-            categories = new CategoryService().getAllCategories();
-            statuses = new StatusService().getAllStatuses();
-            
-        } catch (SQLException | ClassNotFoundException | NumberFormatException ex) {
-            Logger.getLogger(EditFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
-        
-        if (foodDTO == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        
-        request.setAttribute(CommonAttribute.FOOD, foodDTO);
-        request.setAttribute(CommonAttribute.CATEGORIES, categories);
-        request.setAttribute(CommonAttribute.STATUSES, statuses);
-        
-        request.getRequestDispatcher(EditFoodRequest.VIEW)
-                .forward(request, response);
     }
 
     /**
@@ -121,31 +67,29 @@ public class EditFoodServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         
-        // get currently logged in user
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
         
-        // Edit food functionality is accessible only for admin
+        int foodId = StringUtils.getInteger(request.getParameter(FoodParam.FOOD_ID), 0);
+        
         if (!UserService.isAdmin(user)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         
         FoodService foodService = new FoodService();
-        FoodDTO foodDTO = foodService.getFoodDTOFromRequest(request);
-        boolean updated = false;
+        boolean updated;
+        
         try {
-            // do update
-            updated = foodService.updateFood(foodDTO);
+            updated = foodService.updateFoodStatus(foodId, Boolean.FALSE, user.getId());
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(EditFoodServlet.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            Logger.getLogger(DeleteFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
         
         if (updated) {
-            request.getSession().setAttribute(CommonAttribute.UPDATE_STATUS, Boolean.TRUE);
+            session.setAttribute(CommonAttribute.DELETE_STATUS, Boolean.TRUE);
         }
         
         response.sendRedirect(ManageFoodRequest.SERVLET);

@@ -10,6 +10,8 @@ public class CommonAttribute {
     public static final String LOGOUT_STATUS = "LOGOUT";
     
     public static final String INSERT_STATUS = "INSERT";
+    public static final String UPDATE_STATUS = "UPDATE";
+    public static final String DELETE_STATUS = "DELETE";
     
     public static final String CATEGORIES = "CATEGORIES";
     

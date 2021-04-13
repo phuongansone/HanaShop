@@ -13,7 +13,9 @@
         <div class="container page-content">
             <c:if test="${requestScope.INSERT == 'SUCCESS'}">
                 <fmt:setBundle basename="InfoMessage_en" var="msg_bundle" scope="page"/> 
-                <fmt:message key="food.insert.success" bundle="${msg_bundle}"/>
+                <div class="alert alert-success" role="alert">
+                    <fmt:message key="food.insert.success" bundle="${msg_bundle}"/>
+                </div>
             </c:if>
             <h1>Add new food</h1>
             <form name="addFoodForm" method="POST" 
