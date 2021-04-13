@@ -32,7 +32,7 @@ public class FoodService {
     private final FoodDAO foodDAO;
     private static final String IMAGES_DIR = "images";
     private static final String RESOURCES = "resources";
-    private static final String CHECKED_CHECKBOX_VALUE = "on";
+    private static final String FLAG_ON = "1";
 
     /**
      * Constructor
@@ -240,8 +240,7 @@ public class FoodService {
         
         if (request.getParameter(FoodParam.FOOD_ID) != null) {
             // food record is already in database
-            boolean isActive = CHECKED_CHECKBOX_VALUE
-                    .equalsIgnoreCase(request.getParameter(FoodParam.STATUS));
+            boolean isActive = FLAG_ON.equals(request.getParameter(FoodParam.STATUS));
             FoodDTO food = new FoodDTO(foodName, foodImg, description, price, 
                     new CategoryDTO(categoryId), isActive, quantity);
             food.setFoodId(StringUtils.getInteger(request.getParameter(FoodParam.FOOD_ID), 0));

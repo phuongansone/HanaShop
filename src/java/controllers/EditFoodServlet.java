@@ -10,6 +10,7 @@ import constants.RequestMappingConstants.*;
 import static constants.RequestParameter.*;
 import dto.CategoryDTO;
 import dto.FoodDTO;
+import dto.StatusDTO;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import services.CategoryService;
 import services.FoodService;
+import services.StatusService;
 import services.UserService;
 
 /**
@@ -79,11 +81,14 @@ public class EditFoodServlet extends HttpServlet {
         
         FoodDTO foodDTO;
         List<CategoryDTO> categories;
+        List<StatusDTO> statuses;
         
         try {
             int foodId = Integer.parseInt(request.getParameter(FoodParam.FOOD_ID));
             foodDTO = new FoodService().getFoodById(foodId);
             categories = new CategoryService().getAllCategories();
+            statuses = new StatusService().getAllStatuses();
+            
         } catch (SQLException | ClassNotFoundException | NumberFormatException ex) {
             Logger.getLogger(EditFoodServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -97,8 +102,10 @@ public class EditFoodServlet extends HttpServlet {
         
         request.setAttribute(CommonAttribute.FOOD, foodDTO);
         request.setAttribute(CommonAttribute.CATEGORIES, categories);
+        request.setAttribute(CommonAttribute.STATUSES, statuses);
         
-        request.getRequestDispatcher(EditFoodRequest.VIEW).forward(request, response);
+        request.getRequestDispatcher(EditFoodRequest.VIEW)
+                .forward(request, response);
     }
 
     /**
@@ -127,12 +134,14 @@ public class EditFoodServlet extends HttpServlet {
         FoodService foodService = new FoodService();
         FoodDTO foodDTO = foodService.getFoodDTOFromRequest(request);
         List<CategoryDTO> categories;
+        List<StatusDTO> statuses;
         try {
             // do update
             foodService.updateFood(foodDTO);
             
             // get data for re-rendering
             categories = new CategoryService().getAllCategories();
+            statuses = new StatusService().getAllStatuses();
             foodDTO = foodService.getFoodById(foodDTO.getFoodId());
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(EditFoodServlet.class.getName())
@@ -144,6 +153,7 @@ public class EditFoodServlet extends HttpServlet {
         
         request.setAttribute(CommonAttribute.FOOD, foodDTO);
         request.setAttribute(CommonAttribute.CATEGORIES, categories);
+        request.setAttribute(CommonAttribute.STATUSES, statuses);
         
         request.getRequestDispatcher(EditFoodRequest.VIEW).forward(request, response);
     }

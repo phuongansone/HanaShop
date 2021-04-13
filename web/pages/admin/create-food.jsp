@@ -41,6 +41,7 @@
                     <label for="price">Price</label>
                     <input type="number" id="price" 
                            name="foodPrice" placeholder="Price" 
+                           step="500"
                            min="1000" max="1000000" required />
                 </div>
                 <div>

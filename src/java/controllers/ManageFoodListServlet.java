@@ -3,7 +3,6 @@ package controllers;
 import constants.CommonAttribute;
 import constants.RequestMappingConstants.ManageFoodListRequest;
 import constants.RequestParameter;
-import dao.StatusDAO;
 import dto.CategoryDTO;
 import dto.FoodDTO;
 import dto.StatusDTO;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import services.CategoryService;
 import services.FoodService;
+import services.StatusService;
 import services.UserService;
 import utils.StringUtils;
 
@@ -82,7 +82,7 @@ public class ManageFoodListServlet extends HttpServlet {
         
         FoodService foodService = new FoodService();
         CategoryService categoryService = new CategoryService();
-        StatusDAO statusDAO = new StatusDAO();
+        StatusService statusService = new StatusService();
         List<FoodDTO> foodLst;
         List<CategoryDTO> categories;
         List<StatusDTO> statuses;
@@ -94,7 +94,7 @@ public class ManageFoodListServlet extends HttpServlet {
             int offset = (page - 1) * recordPerPage;
             foodLst = foodService.getAllFood(offset, recordPerPage);
             categories = categoryService.getAllCategories();
-            statuses = statusDAO.getAllStatuses();
+            statuses = statusService.getAllStatuses();
             
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ManageFoodListServlet.class.getName())

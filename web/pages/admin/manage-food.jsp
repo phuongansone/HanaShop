@@ -21,5 +21,6 @@
     <script src="resources/js/jquery-3.6.0.min.js"></script>
     <script src="resources/js/utils.js"></script>
     <script src="resources/js/manage-food.js"></script>
+    <script src="resources/js/manage-food-list.js"></script>
     <script src="resources/js/bootstrap.min.js" /></script>
 </html>
