@@ -21,8 +21,8 @@ import java.sql.Date;
  */
 public class FoodDAO {
     
-    private static final String UPDATE_FOOD_STATUS = "UPDATE food SET status = ? "
-            + "AND userUpdated = ? WHERE foodId = ?";
+    private static final String UPDATE_FOOD_STATUS = "UPDATE food SET status = ?"
+            + ", userUpdated = ? WHERE foodId = ?";
     
     /**
      * Add new food to the DB

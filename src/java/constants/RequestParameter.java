@@ -139,4 +139,12 @@ public class RequestParameter {
             
         }
     }
+    
+    public static class CartParam {
+        public static final String QUANTITY = "quantity";
+        
+        private CartParam() {
+            
+        }
+    }
 }

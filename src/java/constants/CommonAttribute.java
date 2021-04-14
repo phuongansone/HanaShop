@@ -25,4 +25,7 @@ public class CommonAttribute {
     
     public static final String FOOD = "FOOD";
     public static final String FOODS = "FOODS";
+    
+    public static final String CART = "CART";
+    public static final String TOTAL_PRICE = "TOTAL_PRICE";
 }

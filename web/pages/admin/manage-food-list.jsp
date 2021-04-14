@@ -54,7 +54,9 @@
                                 <div class="d-flex justify-content-end">
                                     <a class="btn btn-success m-1" 
                                        href="MainServlet?action=editFood&foodId=${food.foodId}">Edit</a>
-                                    <form class="delete-form" method="POST" action="MainServlet">
+                                    <form class="delete-form" method="POST" 
+                                          action="MainServlet"
+                                          onsubmit="return confirm('Sản phẩm sẽ bị xóa. Bạn có muốn tiếp tục?')">
                                         <input type="hidden" name="action" value="deleteFood" />
                                         <button class="btn btn-danger m-1 btn-delete" 
                                                 type="submit"

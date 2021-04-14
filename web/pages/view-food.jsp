@@ -10,7 +10,7 @@
         <c:set var="food" value="${requestScope.FOOD}"></c:set>
         <h1>${food.foodName}</h1>
         <div>
-            <img src="resources/images/${food.foodImage}"/>
+            <img src="/files/${food.foodImage}"/>
         </div>
             <div><b>Category</b>: ${food.category.categoryName}</div>
         <div>

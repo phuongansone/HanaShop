@@ -105,7 +105,6 @@
                         </c:if>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-success m-1">Save</button>
-                            <button type="button" class="btn btn-danger m-1">Delete</button>
                         </div>
 
                     </div>                            

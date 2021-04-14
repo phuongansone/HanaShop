@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="enums.Role" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,6 +8,7 @@
         <title>Search Page</title>
     </head>
     <body>
+        <c:set var="user" value="${sessionScope.USER}" />
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-center row">
                 <div class="col-md-10">
@@ -37,12 +39,27 @@
                                     <h4 class="mr-1">${food.foodPrice} VNĐ</h4>
                                 </div>
                                 <h6 class="text-success">Miễn phí vận chuyển</h6>
-                                <div class="d-flex flex-column mt-4">
-                                    <a class="btn btn-primary btn-sm" 
-                                       href="MainServlet?action=foodDetail&foodId=${food.foodId}">
-                                        Chi tiết
-                                    </a>
-                                </div>
+                                <c:if test="${user.roleId != Role.ADMIN.value}">
+                                    <form action="MainServlet" method="POST">
+                                        <div class="d-flex flex-column mt-4">
+                                            <div class="mb-1">
+                                                <input type="hidden" name="foodId" 
+                                                       value="${food.foodId}" />
+                                                <input type="number" name="quantity" 
+                                                       value="1" step="1"
+                                                       class="form-control"/>
+                                            </div>
+                                            <div class="mt-1">
+                                                <button class="btn btn-primary btn-sm btn-block"  
+                                                        type="submit" name="action" 
+                                                        value="addToCart"
+                                                        class="form-control">
+                                                    Thêm vào giỏ
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c:if>
                             </div>                            
                         </div>
                     </c:forEach>

@@ -1,5 +1,6 @@
 package controllers;
 
+import constants.RequestMappingConstants.AddToCartRequest;
 import constants.RequestMappingConstants.CreateFoodRequest;
 import constants.RequestMappingConstants.DeleteFoodRequest;
 import constants.RequestMappingConstants.EditFoodRequest;
@@ -9,7 +10,10 @@ import constants.RequestMappingConstants.LoginRequest;
 import constants.RequestMappingConstants.LogoutRequest;
 import constants.RequestMappingConstants.ManageFoodListRequest;
 import constants.RequestMappingConstants.ManageFoodRequest;
+import constants.RequestMappingConstants.RemoveFoodFromCartRequest;
 import constants.RequestMappingConstants.SearchItemRequest;
+import constants.RequestMappingConstants.UpdateCartRequest;
+import constants.RequestMappingConstants.ViewCartRequest;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -81,6 +85,19 @@ public class MainServlet extends HttpServlet {
                 case DeleteFoodRequest.ACTION:
                     url = DeleteFoodRequest.SERVLET;
                     break;
+                case AddToCartRequest.ACTION:
+                    url = AddToCartRequest.SERVLET;
+                    break;
+                case ViewCartRequest.ACTION:
+                    url = ViewCartRequest.SERVLET;
+                    break;
+                case RemoveFoodFromCartRequest.ACTION:
+                    url = RemoveFoodFromCartRequest.SERVLET;
+                    break;
+                case UpdateCartRequest.ACTION:
+                    url = UpdateCartRequest.SERVLET;
+                    break;
+                    
             }
         }
         

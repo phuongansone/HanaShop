@@ -196,6 +196,65 @@ public class RequestMappingConstants {
         }
     }
     
+    public static class AddToCartRequest {
+        /** Action parameter */
+        public static final String ACTION = "addToCart";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "AddToCartServlet";
+        
+        /**
+         * Constructor
+         */
+        private AddToCartRequest() {
+        }
+    }
+    
+    public static class ViewCartRequest {
+        /** Action parameter */
+        public static final String ACTION = "viewCart";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "ViewCartServlet";
+        
+        /** View jsp for admin */
+        public static final String VIEW = "pages/view-cart.jsp";
+        
+        /**
+         * Constructor
+         */
+        private ViewCartRequest() {
+        }
+    }
+    
+    public static class RemoveFoodFromCartRequest {
+        /** Action parameter */
+        public static final String ACTION = "removeFoodFromCart";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "RemoveFoodFromCartServlet";
+        
+        /**
+         * Constructor
+         */
+        private RemoveFoodFromCartRequest() {
+        }
+    }
+    
+    public static class UpdateCartRequest {
+        /** Action parameter */
+        public static final String ACTION = "updateCart";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "UpdateCartServlet";
+        
+        /**
+         * Constructor
+         */
+        private UpdateCartRequest() {
+        }
+    }
+    
     /**
      * Error Page
      */
