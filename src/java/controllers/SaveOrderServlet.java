@@ -2,16 +2,22 @@ package controllers;
 
 import constants.CommonAttribute;
 import constants.RequestMappingConstants.LoginRequest;
-import constants.RequestMappingConstants.ViewCartRequest;
+import constants.RequestMappingConstants.SaveOrderRequest;
+import constants.RequestMappingConstants.SearchItemRequest;
 import dto.CartItem;
+import dto.FoodDTO;
 import dto.UserDTO;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import services.FoodService;
 import services.OrderService;
 import services.UserService;
 
@@ -19,7 +25,7 @@ import services.UserService;
  *
  * @author andtpse62827
  */
-public class ViewCartServlet extends HttpServlet {
+public class SaveOrderServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,27 +56,20 @@ public class ViewCartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
         
-        // redirect to login if user does not log in
         if (user == null) {
             response.sendRedirect(LoginRequest.SERVLET);
             return;
         }
         
-        // Admin cannot use this function
         if (UserService.isAdmin(user)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         
-        List<CartItem> cart = (List<CartItem>) session.getAttribute(CommonAttribute.CART);
-        
-        session.setAttribute(CommonAttribute.TOTAL_PRICE, OrderService.calculateTotalPrice(cart));
-        
-        request.getRequestDispatcher(ViewCartRequest.VIEW).forward(request, response);
+        request.getRequestDispatcher(SaveOrderRequest.VIEW_GET).forward(request, response);
     }
 
     /**
@@ -85,6 +84,41 @@ public class ViewCartServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
+        
+        if (user == null) {
+            response.sendRedirect(LoginRequest.SERVLET);
+            return;
+        }
+        
+        if (UserService.isAdmin(user)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        
+        List<CartItem> cart = (List<CartItem>) session.getAttribute(CommonAttribute.CART);
+        
+        boolean outOfStock = false;
+        OrderService orderService = new OrderService();
+        try {
+            outOfStock = checkFoodOutOfStock(cart);
+            
+            if (outOfStock) {
+                // TODO: if food is out of stock, display warning message
+            } else {
+                // if ok, save order to database
+                orderService.saveOrder(request);
+            }
+            
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SaveOrderServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
+        
+        request.getRequestDispatcher(SearchItemRequest.SERVLET).forward(request, response);
     }
 
     /**
@@ -95,5 +129,33 @@ public class ViewCartServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
+    }
+    
+    /**
+     * Check if food in cart is out of stock
+     * @param cart
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    private boolean checkFoodOutOfStock(List<CartItem> cart) 
+            throws SQLException, ClassNotFoundException {
+        boolean outOfStock = false;
+        FoodService foodService = new FoodService();
+        
+        for (CartItem item : cart) {
+            // get latest food information
+            int foodId = item.getFood().getFoodId();
+            FoodDTO food = foodService.getFoodById(foodId);
+            item.setFood(food);
+
+            // check if number of item in cart is larger than available quantity
+            if (food.getFoodQuantity() < item.getQuantity()) {
+                item.setOutOfStock(Boolean.TRUE);
+                outOfStock = Boolean.TRUE;
+            }
+        }
+        
+        return outOfStock;
     }
 }

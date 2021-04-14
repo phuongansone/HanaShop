@@ -60,6 +60,10 @@
         <servlet-name>UpdateCartServlet</servlet-name>
         <servlet-class>controllers.UpdateCartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SaveOrderServlet</servlet-name>
+        <servlet-class>controllers.SaveOrderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchItemServlet</servlet-name>
         <url-pattern>/SearchItemServlet</url-pattern>
@@ -123,6 +127,10 @@
     <servlet-mapping>
         <servlet-name>UpdateCartServlet</servlet-name>
         <url-pattern>/UpdateCartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveOrderServlet</servlet-name>
+        <url-pattern>/SaveOrderServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

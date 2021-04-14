@@ -140,8 +140,25 @@ public class RequestParameter {
         }
     }
     
+    public static class OrderParam {
+        public static final String ORDER_ID = "orderId";
+        public static final String CREATE_ORDER_AT = "createOrderAt";
+        public static final String USER_ID = "userId";
+        public static final String TOTAL_PRICE = "totalPrice";
+        public static final String PHONE = "phone";
+        public static final String EMAIL = "email";
+        public static final String ADDRESS = "address";
+        public static final String USERNAME = "username";
+        public static final String PAYMENT_METHOD = "paymentMethod";
+        
+        private OrderParam() {
+            
+        }
+    }
+    
     public static class CartParam {
         public static final String QUANTITY = "quantity";
+        public static final String ORDER_ID = "orderId";
         
         private CartParam() {
             

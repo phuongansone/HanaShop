@@ -256,6 +256,43 @@ public class RequestMappingConstants {
     }
     
     /**
+     * Save Order
+     */
+    public static class SaveOrderRequest {
+        /** Action parameter */
+        public static final String ACTION = "saveOrder";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "SaveOrderServlet";
+        
+        /** View for get request */
+        public static final String VIEW_GET = "pages/customer-info.jsp";
+        
+        /**
+         * Constructor
+         */
+        private SaveOrderRequest() {
+        }
+    }
+    
+    public static class ViewOrderRequest {
+        /** Action parameter */
+        public static final String ACTION = "viewOrder";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "ViewOrderServlet";
+        
+        /** View for get request */
+        public static final String VIEW_GET = "pages/order.jsp";
+        
+        /**
+         * Constructor
+         */
+        private ViewOrderRequest() {
+        }
+    }
+    
+    /**
      * Error Page
      */
     public static class ErrorPage {

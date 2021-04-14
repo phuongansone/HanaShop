@@ -11,6 +11,7 @@ import constants.RequestMappingConstants.LogoutRequest;
 import constants.RequestMappingConstants.ManageFoodListRequest;
 import constants.RequestMappingConstants.ManageFoodRequest;
 import constants.RequestMappingConstants.RemoveFoodFromCartRequest;
+import constants.RequestMappingConstants.SaveOrderRequest;
 import constants.RequestMappingConstants.SearchItemRequest;
 import constants.RequestMappingConstants.UpdateCartRequest;
 import constants.RequestMappingConstants.ViewCartRequest;
@@ -96,6 +97,9 @@ public class MainServlet extends HttpServlet {
                     break;
                 case UpdateCartRequest.ACTION:
                     url = UpdateCartRequest.SERVLET;
+                    break;
+                case SaveOrderRequest.ACTION:
+                    url = SaveOrderRequest.SERVLET;
                     break;
                     
             }

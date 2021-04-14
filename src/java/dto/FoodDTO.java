@@ -64,7 +64,9 @@ public class FoodDTO implements Serializable{
      * @param foodQuantity
      * @param userCreated
      */
-    public FoodDTO(int foodId, String foodName, String foodImage, String description, int foodPrice, Date createAt, Date updateAt, CategoryDTO category, boolean status, int foodQuantity, UserDTO userCreated) {
+    public FoodDTO(int foodId, String foodName, String foodImage, String description, 
+            int foodPrice, Date createAt, Date updateAt, CategoryDTO category, 
+            boolean status, int foodQuantity, UserDTO userCreated) {
         this.foodId = foodId;
         this.foodName = foodName;
         this.foodImage = foodImage;

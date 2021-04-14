@@ -42,7 +42,7 @@
                                                    name="quantity"
                                                    value="${cartItem.quantity}"
                                                    class="form-control mr-2"/>
-                                            <button type="submit" class="btn btn-success form-control mr-2">Cập nhật</button>
+                                            <button type="submit" class="btn btn-outline-success form-control mr-2">Cập nhật</button>
                                         </form>
                                         <!-- Delete form -->
                                         <form action="MainServlet" method="POST" 
@@ -81,8 +81,14 @@
                             <h4>Tổng giá trị đơn hàng</h4>
                         </div>
                         <div>
-                            <h3>${requestScope.TOTAL_PRICE} <small class="text-muted">VNĐ</small></h3>
+                            <h3>${sessionScope.TOTAL_PRICE} <small class="text-muted">VNĐ</small></h3>
                         </div>
+                    </div>
+                    <div class="mb-4">
+                        <a href="MainServlet?action=saveOrder" 
+                           class="btn btn-success form-control">
+                            Đặt hàng
+                        </a>
                     </div>
                 </div>
             </div>

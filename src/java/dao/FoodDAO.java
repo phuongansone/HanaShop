@@ -24,6 +24,9 @@ public class FoodDAO {
     private static final String UPDATE_FOOD_STATUS = "UPDATE food SET status = ?"
             + ", userUpdated = ? WHERE foodId = ?";
     
+    private static final String UPDATE_FOOD_QUANTITY = "UPDATE food SET foodQuantity = ? "
+            + "WHERE foodId = ?";
+    
     /**
      * Add new food to the DB
      * @param foodDTO
@@ -587,6 +590,7 @@ public class FoodDAO {
      * Update food status
      * @param foodId
      * @param status
+     * @param userId
      * @return
      * @throws SQLException
      * @throws ClassNotFoundException 
@@ -615,6 +619,38 @@ public class FoodDAO {
         }
         
         return updatedRow > 0;
+    }
+    
+    /**
+     * update food quantity
+     * @param foodId
+     * @param quantity
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public boolean updateFoodQuantity(int foodId, int quantity) 
+            throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        
+        boolean updated = false;
+        
+        try {
+            conn = DatabaseUtils.makeConnection();
+            
+            if (conn != null) {
+                ps = conn.prepareStatement(UPDATE_FOOD_QUANTITY);
+                ps.setInt(1, quantity);
+                ps.setInt(2, foodId);
+                
+                updated = ps.executeUpdate() > 0;
+            }
+        } finally {
+            DatabaseUtils.closeConnection(conn, ps, null);
+        }
+        
+        return updated;
     }
     
     /**
