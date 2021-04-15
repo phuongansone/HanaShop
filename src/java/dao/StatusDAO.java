@@ -15,6 +15,8 @@ import utils.DatabaseUtils;
  * @author andtpse62827
  */
 public class StatusDAO {
+    private static final String GET_ALL_STATUSES = "SELECT code, name FROM status";
+    
     public List<StatusDTO> getAllStatuses() 
             throws SQLException, ClassNotFoundException {
         Connection conn = null;
@@ -26,7 +28,7 @@ public class StatusDAO {
         try {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
-                String sql = "SELECT code, name FROM status";
+                String sql = GET_ALL_STATUSES;
                 ps = conn.prepareStatement(sql);
                 rs = ps.executeQuery();
                 

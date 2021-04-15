@@ -16,6 +16,7 @@ import static constants.RequestParameter.*;
  * @author andtpse62827
  */
 public class CategoryDAO {
+    private static final String GET_ALL_CATEGORIES = "SELECT categoryId, categoryName FROM category";
     /**
      * Get all categories
      * @return categories
@@ -33,8 +34,7 @@ public class CategoryDAO {
         try {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
-                String sql = "SELECT categoryId, categoryName FROM category";
-                ps = conn.prepareStatement(sql);
+                ps = conn.prepareStatement(GET_ALL_CATEGORIES);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     int id = rs.getInt(CategoryParam.CATEGORY_ID);

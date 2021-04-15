@@ -15,6 +15,12 @@ import utils.DatabaseUtils;
  * @author andtpse62827
  */
 public class PriceRangeDAO {
+    private static final String GET_ALL_PRICE_RANGES = "SELECT p.id, p.name, p.from, p.to "
+                        + "FROM price_range p WHERE p.status = 1";
+    
+    private static final String GET_RANGE_BY_ID = "SELECT p.id, p.name, p.from, p.to "
+                        + "FROM price_range p WHERE p.status = 1 AND p.id = ?";
+    
     public List<PriceRangeDTO> getAllActivePriceRanges() 
             throws SQLException, ClassNotFoundException {
         Connection conn = null;
@@ -26,9 +32,7 @@ public class PriceRangeDAO {
         try {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
-                String sql = "SELECT p.id, p.name, p.from, p.to "
-                        + "FROM price_range p WHERE p.status = 1";
-                ps = conn.prepareStatement(sql);
+                ps = conn.prepareStatement(GET_ALL_PRICE_RANGES);
                 rs = ps.executeQuery();
                 
                 while(rs.next()) {
@@ -53,9 +57,7 @@ public class PriceRangeDAO {
             conn = DatabaseUtils.makeConnection();
             
             if (conn != null) {
-                String sql = "SELECT p.id, p.name, p.from, p.to "
-                        + "FROM price_range p WHERE p.status = 1 AND p.id = ?";
-                ps = conn.prepareStatement(sql);
+                ps = conn.prepareStatement(GET_RANGE_BY_ID);
                 ps.setInt(1, id);
                 
                 rs = ps.executeQuery();

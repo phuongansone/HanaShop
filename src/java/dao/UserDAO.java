@@ -16,6 +16,13 @@ public class UserDAO {
     private PreparedStatement ps;
     private ResultSet rs;
     
+    private static final String GET_USER = "select u.id, u.roleId, u.username, "
+                        + "u.email, u.phone, "
+                        + "u.address "
+                        + "from user u inner join role r "
+                        + "using (roleId) "
+                        + "where u.username = ? and password = ?";
+    
     /**
      * Get user based on username and password
      * @param username username
@@ -31,31 +38,13 @@ public class UserDAO {
         try {
             conn = DatabaseUtils.makeConnection();
             if (conn != null) {
-                String sql = "select u.id, u.roleId, u.username, "
-                        + "u.email, u.phone, "
-                        + "u.address "
-                        + "from user u inner join role r "
-                        + "using (roleId) "
-                        + "where u.username = ? and password = ?";
-                ps = conn.prepareStatement(sql);
+                ps = conn.prepareStatement(GET_USER);
                 ps.setString(1, username);
                 ps.setString(2, password);
                 rs = ps.executeQuery();
+                
                 if (rs.next()) {
-                    int id = rs.getInt("id");
-                    int roleId = rs.getInt("roleId");
-                    String name = rs.getString("username");
-                    String email = rs.getString("email");
-                    String phone = rs.getString("phone");
-                    String address = rs.getString("address");
-                    
-                    userDTO = new UserDTO();
-                    userDTO.setId(id);
-                    userDTO.setRoleId(roleId);
-                    userDTO.setUsername(name);
-                    userDTO.setEmail(email);
-                    userDTO.setPhone(phone);
-                    userDTO.setAddress(address);
+                    userDTO = mapResultSetToUserDTO(rs);
                 }
             }
         
@@ -63,6 +52,25 @@ public class UserDAO {
             DatabaseUtils.closeConnection(conn, ps, rs);
         }
         
+        return userDTO;
+    }
+    
+    private UserDTO mapResultSetToUserDTO(ResultSet rs) throws SQLException {
+        int id = rs.getInt("id");
+        int roleId = rs.getInt("roleId");
+        String name = rs.getString("username");
+        String email = rs.getString("email");
+        String phone = rs.getString("phone");
+        String address = rs.getString("address");
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(id);
+        userDTO.setRoleId(roleId);
+        userDTO.setUsername(name);
+        userDTO.setEmail(email);
+        userDTO.setPhone(phone);
+        userDTO.setAddress(address);
+
         return userDTO;
     }
 }
