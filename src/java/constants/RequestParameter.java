@@ -150,6 +150,9 @@ public class RequestParameter {
         public static final String ADDRESS = "address";
         public static final String USERNAME = "username";
         public static final String PAYMENT_METHOD = "paymentMethod";
+        public static final String PAYMENT_METHOD_NAME = "paymentMethodName";
+        public static final String DATE = "date";
+        public static final String KEYWORD = "keyword";
         
         private OrderParam() {
             

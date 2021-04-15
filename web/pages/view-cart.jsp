@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>s
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,6 +13,7 @@
         <%@include file="common/navbar.jspf" %>
         
         <c:set var="cart" value="${sessionScope.CART}"/>
+        <fmt:setBundle basename="InfoMessage_en" var="msg_bundle" />
         <div class="container page-content">
             <br>
             <h5>Giỏ hàng của bạn</h5>
@@ -31,6 +33,14 @@
                                     <div class="mt-1 mb-1 spec-1">
                                         <b>Giá</b>: ${cartItem.food.foodPrice}
                                     </div>
+                                    <c:if test="${cartItem.outOfStock and cartItem.quantity > cartItem.food.foodQuantity}">
+                                        <div class="alert alert-warning" role="alert">
+                                            <fmt:message key="food.outOfStock" bundle="${msg_bundle}">
+                                                <fmt:param value="${cartItem.food.foodQuantity}"/>
+                                            </fmt:message>
+                                        </div>                                             
+                                    </c:if>
+
                                     <div class="d-flex justify-content-between">
                                         <!-- Update form -->
                                         <form class="d-flex justify-content-between" action="MainServlet" method="POST">

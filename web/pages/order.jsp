@@ -1,9 +1,3 @@
-<%-- 
-    Document   : order
-    Created on : Apr 14, 2021, 11:34:42 PM
-    Author     : PC
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

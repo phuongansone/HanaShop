@@ -4,8 +4,8 @@ import constants.CommonAttribute;
 import constants.RequestMappingConstants.LoginRequest;
 import constants.RequestMappingConstants.SaveOrderRequest;
 import constants.RequestMappingConstants.SearchItemRequest;
+import constants.RequestMappingConstants.ViewCartRequest;
 import dto.CartItem;
-import dto.FoodDTO;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import services.FoodService;
 import services.OrderService;
+import static services.OrderService.checkFoodOutOfStock;
 import services.UserService;
 
 /**
@@ -69,6 +69,24 @@ public class SaveOrderServlet extends HttpServlet {
             return;
         }
         
+        List<CartItem> cart = (List<CartItem>) session.getAttribute(CommonAttribute.CART);
+        boolean outOfStock;
+        
+        try {
+            outOfStock = checkFoodOutOfStock(cart);
+            session.setAttribute(CommonAttribute.CART, cart);
+            
+            if (outOfStock) {
+                response.sendRedirect(ViewCartRequest.SERVLET);
+                return;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(SaveOrderServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
+        
         request.getRequestDispatcher(SaveOrderRequest.VIEW_GET).forward(request, response);
     }
 
@@ -99,16 +117,20 @@ public class SaveOrderServlet extends HttpServlet {
         
         List<CartItem> cart = (List<CartItem>) session.getAttribute(CommonAttribute.CART);
         
-        boolean outOfStock = false;
+        boolean outOfStock;
         OrderService orderService = new OrderService();
         try {
-            outOfStock = checkFoodOutOfStock(cart);
+            outOfStock = OrderService.checkFoodOutOfStock(cart);
+            session.setAttribute(CommonAttribute.CART, cart);
             
             if (outOfStock) {
                 // TODO: if food is out of stock, display warning message
+                response.sendRedirect(ViewCartRequest.SERVLET);
+                return;
             } else {
                 // if ok, save order to database
                 orderService.saveOrder(request);
+                session.removeAttribute(CommonAttribute.CART);
             }
             
         } catch (SQLException | ClassNotFoundException ex) {
@@ -131,31 +153,4 @@ public class SaveOrderServlet extends HttpServlet {
         return "Short description";
     }
     
-    /**
-     * Check if food in cart is out of stock
-     * @param cart
-     * @return
-     * @throws SQLException
-     * @throws ClassNotFoundException 
-     */
-    private boolean checkFoodOutOfStock(List<CartItem> cart) 
-            throws SQLException, ClassNotFoundException {
-        boolean outOfStock = false;
-        FoodService foodService = new FoodService();
-        
-        for (CartItem item : cart) {
-            // get latest food information
-            int foodId = item.getFood().getFoodId();
-            FoodDTO food = foodService.getFoodById(foodId);
-            item.setFood(food);
-
-            // check if number of item in cart is larger than available quantity
-            if (food.getFoodQuantity() < item.getQuantity()) {
-                item.setOutOfStock(Boolean.TRUE);
-                outOfStock = Boolean.TRUE;
-            }
-        }
-        
-        return outOfStock;
-    }
 }

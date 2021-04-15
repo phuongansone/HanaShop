@@ -15,6 +15,7 @@ public class OrderDTO implements Serializable {
     private int userId;
     private String username;
     private int paymentMethod;
+    private String paymentMethodName;
     private int totalPrice;
     private Date createOrderAt;
 
@@ -116,6 +117,12 @@ public class OrderDTO implements Serializable {
         this.createOrderAt = createOrderAt;
     }
 
-    
+    public String getPaymentMethodName() {
+        return paymentMethodName;
+    }
+
+    public void setPaymentMethodName(String paymentMethodName) {
+        this.paymentMethodName = paymentMethodName;
+    }
     
 }

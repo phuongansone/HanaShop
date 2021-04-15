@@ -292,6 +292,23 @@ public class RequestMappingConstants {
         }
     }
     
+    public static class ViewOrderHistoryRequest {
+        /** Action parameter */
+        public static final String ACTION = "viewOrderHistory";
+        
+        /** Processing servlet */
+        public static final String SERVLET = "ViewOrderHistoryServlet";
+        
+        /** View for get request */
+        public static final String VIEW = "pages/orders-history.jsp";
+        
+        /**
+         * Constructor
+         */
+        private ViewOrderHistoryRequest() {
+        }
+    }
+    
     /**
      * Error Page
      */

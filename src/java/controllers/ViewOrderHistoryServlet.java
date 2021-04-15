@@ -1,9 +1,11 @@
 package controllers;
 
 import constants.CommonAttribute;
-import constants.RequestMappingConstants.LoginRequest;
-import constants.RequestMappingConstants.ViewCartRequest;
-import dto.CartItem;
+import constants.RequestMappingConstants;
+import constants.RequestMappingConstants.ViewOrderHistoryRequest;
+import constants.RequestParameter;
+import constants.RequestParameter.OrderParam;
+import dto.OrderDTO;
 import dto.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,7 +24,7 @@ import services.UserService;
  *
  * @author andtpse62827
  */
-public class ViewCartServlet extends HttpServlet {
+public class ViewOrderHistoryServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,6 +41,7 @@ public class ViewCartServlet extends HttpServlet {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0); // Proxies.
+        System.out.println("I'M HERE");
     }
 
     /**
@@ -53,13 +56,12 @@ public class ViewCartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute(CommonAttribute.USER);
         
         // redirect to login if user does not log in
         if (user == null) {
-            response.sendRedirect(LoginRequest.SERVLET);
+            response.sendRedirect(RequestMappingConstants.LoginRequest.SERVLET);
             return;
         }
         
@@ -69,20 +71,26 @@ public class ViewCartServlet extends HttpServlet {
             return;
         }
         
-        List<CartItem> cart = (List<CartItem>) session.getAttribute(CommonAttribute.CART);
-        
+        String date = request.getParameter(OrderParam.DATE);
+        String keyword = request.getParameter(OrderParam.KEYWORD);
+        OrderService orderService = new OrderService();
+        List<OrderDTO> orders;
         try {
-            OrderService.checkFoodOutOfStock(cart);
+            if (keyword != null && !keyword.isBlank()) {
+               orders = orderService.getOrdersByName(user.getId(), keyword);
+            } else if (date != null && !date.isBlank()) {
+                orders = orderService.getOrdersByDate(user.getId(), date);
+            } else {
+                orders = orderService.getAllOrders(user.getId());
+            }
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(ViewCartServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewOrderHistoryServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
         
-        session.setAttribute(CommonAttribute.TOTAL_PRICE, OrderService.calculateTotalPrice(cart));
-        session.setAttribute(CommonAttribute.CART, cart);
-        
-        request.getRequestDispatcher(ViewCartRequest.VIEW).forward(request, response);
+        request.setAttribute(CommonAttribute.ORDERS_HISTORY, orders);
+        request.getRequestDispatcher(ViewOrderHistoryRequest.VIEW).forward(request, response);
     }
 
     /**
@@ -108,4 +116,5 @@ public class ViewCartServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
+
 }

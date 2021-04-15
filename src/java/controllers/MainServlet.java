@@ -15,6 +15,7 @@ import constants.RequestMappingConstants.SaveOrderRequest;
 import constants.RequestMappingConstants.SearchItemRequest;
 import constants.RequestMappingConstants.UpdateCartRequest;
 import constants.RequestMappingConstants.ViewCartRequest;
+import constants.RequestMappingConstants.ViewOrderHistoryRequest;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -101,7 +102,9 @@ public class MainServlet extends HttpServlet {
                 case SaveOrderRequest.ACTION:
                     url = SaveOrderRequest.SERVLET;
                     break;
-                    
+                case ViewOrderHistoryRequest.ACTION:
+                    url = ViewOrderHistoryRequest.SERVLET;
+                    break;
             }
         }
         

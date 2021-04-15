@@ -6,6 +6,7 @@ import dao.FoodDAO;
 import dao.OrderDAO;
 import dao.OrderDetailDAO;
 import dto.CartItem;
+import dto.FoodDTO;
 import dto.OrderDTO;
 import dto.UserDTO;
 import java.sql.SQLException;
@@ -88,5 +89,54 @@ public class OrderService {
         }
       
         return total;
+    }
+    
+    /**
+     * Check if food in cart is out of stock
+     * @param cart
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    public static boolean checkFoodOutOfStock(List<CartItem> cart) 
+            throws SQLException, ClassNotFoundException {
+        boolean outOfStock = false;
+        FoodService foodService = new FoodService();
+        
+        if (cart == null) {
+            return outOfStock;
+        }
+        
+        for (CartItem item : cart) {
+            // get latest food information
+            int foodId = item.getFood().getFoodId();
+            FoodDTO food = foodService.getFoodById(foodId);
+            item.setFood(food);
+
+            // check if number of item in cart is larger than available quantity
+            if (food.getFoodQuantity() < item.getQuantity()) {
+                item.setOutOfStock(Boolean.TRUE);
+                outOfStock = Boolean.TRUE;
+            }
+        }
+        
+        return outOfStock;
+    }
+    
+    public List<OrderDTO> getAllOrders(int userId)
+           throws SQLException, ClassNotFoundException {
+        return orderDAO.getAllOrders(userId);
+    }
+    
+    public List<OrderDTO> getOrdersByDate(int userId, String date)
+            throws SQLException, ClassNotFoundException {
+        String startTime = date + "  00:00:00";
+        String endTime = date + " 23:59:59";
+        return orderDAO.getOrdersByDate(userId, startTime, endTime);
+    }
+    
+    public List<OrderDTO> getOrdersByName(int userId, String keyword) 
+            throws SQLException, ClassNotFoundException {
+        return orderDAO.getOrdersByName(userId, keyword);
     }
 }

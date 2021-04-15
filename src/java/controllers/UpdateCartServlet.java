@@ -7,12 +7,16 @@ import constants.RequestParameter.FoodParam;
 import dto.CartItem;
 import dto.UserDTO;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import services.OrderService;
 import services.UserService;
 import utils.StringUtils;
 
@@ -87,6 +91,14 @@ public class UpdateCartServlet extends HttpServlet {
         
         if (index != -1) {
             cart.get(index).setQuantity(quantity);
+        }
+        
+        try {
+            OrderService.checkFoodOutOfStock(cart);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UpdateCartServlet.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
         
         session.setAttribute(CommonAttribute.CART, cart);

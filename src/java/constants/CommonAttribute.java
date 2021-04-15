@@ -28,4 +28,6 @@ public class CommonAttribute {
     
     public static final String CART = "CART";
     public static final String TOTAL_PRICE = "TOTAL_PRICE";
+    
+    public static final String ORDERS_HISTORY = "ORDERS_HISTORY";
 }

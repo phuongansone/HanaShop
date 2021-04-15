@@ -64,6 +64,10 @@
         <servlet-name>SaveOrderServlet</servlet-name>
         <servlet-class>controllers.SaveOrderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewOrderHistoryServlet</servlet-name>
+        <servlet-class>controllers.ViewOrderHistoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchItemServlet</servlet-name>
         <url-pattern>/SearchItemServlet</url-pattern>
@@ -131,6 +135,10 @@
     <servlet-mapping>
         <servlet-name>SaveOrderServlet</servlet-name>
         <url-pattern>/SaveOrderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewOrderHistoryServlet</servlet-name>
+        <url-pattern>/ViewOrderHistoryServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -37,6 +37,9 @@
 
                     <c:when test="${user.roleId == Role.USER.value}">
                         <li class="nav-item">
+                            <a class="nav-link" href="MainServlet?action=viewOrderHistory">Lịch sử</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="MainServlet?action=viewCart">Giỏ hàng</a>
                         </li>
                     </c:when>
