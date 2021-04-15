@@ -1,7 +1,7 @@
 package controllers;
 
 import constants.CommonAttribute;
-import static constants.RequestMappingConstants.*;
+import constants.RequestMappingConstants.LoginRequest;
 import dto.UserDTO;
 import enums.CRUDStatus;
 import java.io.IOException;

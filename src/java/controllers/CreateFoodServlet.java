@@ -1,6 +1,7 @@
 package controllers;
 
 import constants.CommonAttribute;
+import constants.RequestMappingConstants.CreateFoodRequest;
 import dto.UserDTO;
 import enums.CRUDStatus;
 import java.io.IOException;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import services.FoodService;
 import services.UserService;
 
-import static constants.RequestMappingConstants.*;
 import dto.CategoryDTO;
 import java.util.List;
 import javax.servlet.annotation.MultipartConfig;

@@ -1,6 +1,5 @@
 package dao;
 
-import constants.RequestParameter.CartParam;
 import dto.CartItem;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

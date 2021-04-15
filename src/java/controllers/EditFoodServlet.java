@@ -6,8 +6,9 @@
 package controllers;
 
 import constants.CommonAttribute;
-import constants.RequestMappingConstants.*;
-import static constants.RequestParameter.*;
+import constants.RequestMappingConstants.EditFoodRequest;
+import constants.RequestMappingConstants.ManageFoodRequest;
+import constants.RequestParameter.FoodParam;
 import dto.CategoryDTO;
 import dto.FoodDTO;
 import dto.StatusDTO;

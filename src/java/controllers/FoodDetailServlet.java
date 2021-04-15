@@ -1,6 +1,8 @@
 package controllers;
 
 import constants.CommonAttribute;
+import constants.RequestMappingConstants.EditFoodRequest;
+import constants.RequestMappingConstants.FoodDetailRequest;
 import dto.UserDTO;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -10,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import services.UserService;
 
-import static constants.RequestMappingConstants.*;
 import constants.RequestParameter.*;
 import dto.FoodDTO;
 import java.sql.SQLException;

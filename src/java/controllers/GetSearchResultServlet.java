@@ -1,8 +1,11 @@
 package controllers;
 
-import static constants.RequestParameter.*;
-import static constants.RequestMappingConstants.*;
 import constants.CommonAttribute;
+import constants.RequestMappingConstants.GetSearchResultRequest;
+import constants.RequestParameter.CategoryParam;
+import constants.RequestParameter.FoodParam;
+import static constants.RequestParameter.PAGE;
+import constants.RequestParameter.PriceRangeParam;
 import dto.FoodDTO;
 import dto.PriceRangeDTO;
 import java.io.IOException;

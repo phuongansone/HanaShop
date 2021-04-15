@@ -1,6 +1,6 @@
 package dao;
 
-import static constants.RequestParameter.*;
+import constants.RequestParameter.StatusParam;
 import dto.StatusDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

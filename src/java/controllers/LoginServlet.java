@@ -13,8 +13,9 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 import services.UserService;
 import constants.CommonAttribute;
+import constants.RequestMappingConstants.LoginRequest;
+import constants.RequestMappingConstants.SearchItemRequest;
 import constants.RequestParameter;
-import static constants.RequestMappingConstants.*;
 import enums.CRUDStatus;
 
 /**

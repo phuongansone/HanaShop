@@ -1,15 +1,11 @@
 package controllers;
 
 import constants.CommonAttribute;
-import constants.RequestMappingConstants;
 import constants.RequestMappingConstants.LoginRequest;
-import constants.RequestMappingConstants.ViewCartRequest;
-import constants.RequestParameter;
 import constants.RequestParameter.FoodParam;
 import dto.CartItem;
 import dto.UserDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

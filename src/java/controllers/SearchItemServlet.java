@@ -1,13 +1,13 @@
 package controllers;
 
 import constants.CommonAttribute;
+import constants.RequestMappingConstants.SearchItemRequest;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static constants.RequestMappingConstants.*;
 import dto.CategoryDTO;
 import dto.PriceRangeDTO;
 import java.sql.SQLException;

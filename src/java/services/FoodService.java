@@ -1,7 +1,7 @@
 package services;
 
 import constants.CommonAttribute;
-import static constants.RequestParameter.*;
+import constants.RequestParameter.FoodParam;
 import dao.FoodDAO;
 import dto.CategoryDTO;
 import dto.FoodDTO;

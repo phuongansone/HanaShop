@@ -70,7 +70,7 @@
                 </c:forEach>
             </div>
             
-            <button id="btnSearch" class="mt-2">Tìm kiếm</button>
+            <button id="btnSearch" class="btn btn-secondary mt-2">Tìm kiếm</button>
         </div>
         
         <div id="searchResult">

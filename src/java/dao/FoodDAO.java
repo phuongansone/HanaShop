@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.DatabaseUtils;
 
-import constants.RequestParameter.*;
 import constants.RequestParameter;
+import constants.RequestParameter.CategoryParam;
+import constants.RequestParameter.FoodParam;
 import dto.UserDTO;
 import java.sql.Date;
 
